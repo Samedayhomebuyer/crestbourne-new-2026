@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import AnimateIn from "@/components/AnimateIn";
+import { CometCard } from "@/components/ui/comet-card";
 
 const acquisitions = {
   feature: {
@@ -72,7 +74,8 @@ function AcqCard({
   feature?: boolean;
 }) {
   return (
-    <article className={cn("bg-[#1f1d18] border border-[#2b2823] flex flex-col overflow-hidden", feature && "")}>
+    <CometCard rotateDepth={feature ? 8 : 12} translateDepth={feature ? 12 : 16} className="w-full">
+    <article className={cn("bg-[#1f1d18] border border-[#2b2823] flex flex-col overflow-hidden rounded-2xl", feature && "")}>
       <div
         className={cn(
           "relative bg-[#26241e] overflow-hidden acq-img-bg",
@@ -121,6 +124,7 @@ function AcqCard({
         )}
       </div>
     </article>
+    </CometCard>
   );
 }
 
@@ -130,7 +134,7 @@ export default function RecentlyAcquired() {
       <div className="wrap">
         {/* Section head */}
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-[60px] items-end mb-14">
-          <div>
+          <AnimateIn>
             <div className="font-mono text-[11px] tracking-widest2 uppercase text-[#c5bda1] flex items-center">
               <span className="inline-block w-[6px] h-[6px] rounded-full bg-gold-warm mr-[10px] translate-y-[1px]" />
               Recently Acquired
@@ -138,23 +142,23 @@ export default function RecentlyAcquired() {
             <h2 className="font-serif font-normal text-[clamp(48px,5.5vw,80px)] leading-[0.98] tracking-[-0.02em] mt-4 text-paper">
               The latest<br />additions to the <em className="italic text-gold-warm">book.</em>
             </h2>
-          </div>
-          <p className="text-[17px] leading-[1.6] text-[#bdb6a2] max-w-[50ch] pb-[6px]">
+          </AnimateIn>
+          <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-[#bdb6a2] max-w-[50ch] pb-[6px]">
             Three transactions completed in the last six months. Each sits within our core thesis:
             undervalued income-producing assets with a clear path to repositioning.{" "}
             <a href="#" className="border-b border-[#bdb6a2] pb-[1px]">See the full deal log →</a>
-          </p>
+          </AnimateIn>
         </div>
 
         {/* Cards grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 mb-6">
+        <AnimateIn stagger className="grid grid-cols-1 lg:grid-cols-[1.4fr_1fr] gap-6 mb-6">
           <AcqCard card={acquisitions.feature} feature />
           <div className="flex flex-col gap-6">
             {acquisitions.cards.map((c, i) => (
               <AcqCard key={i} card={c as typeof acquisitions.feature} />
             ))}
           </div>
-        </div>
+        </AnimateIn>
 
         <div className="flex justify-between items-center pt-6 border-t border-[#2b2823]">
           <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8c8267]">

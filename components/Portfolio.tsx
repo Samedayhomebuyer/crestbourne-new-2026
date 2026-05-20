@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import AnimateIn from "@/components/AnimateIn";
 
 type FilterKey = "all" | "residential" | "hmo" | "mixed" | "commercial" | "progress";
 
@@ -124,13 +125,14 @@ const filterMap: Record<FilterKey, string | null> = {
 
 export default function Portfolio() {
   const [active, setActive] = useState<FilterKey>("all");
+  const [hoveredId, setHoveredId] = useState<string | null>(null);
   const visible = properties.filter((p) => !filterMap[active] || p.filter === filterMap[active]);
 
   return (
     <section id="portfolio" className="py-24">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-[60px] items-end mb-14">
-          <div>
+          <AnimateIn>
             <div className="font-mono text-[11px] tracking-widest2 uppercase text-muted flex items-center">
               <span className="inline-block w-[6px] h-[6px] rounded-full bg-accent mr-[10px] translate-y-[1px]" />
               Portfolio
@@ -138,10 +140,10 @@ export default function Portfolio() {
             <h2 className="font-serif font-normal text-[clamp(48px,5.5vw,80px)] leading-[0.98] tracking-[-0.02em] mt-4 text-ink">
               A curated book<br />of <em className="italic text-accent">income assets.</em>
             </h2>
-          </div>
-          <p className="text-[17px] leading-[1.6] text-ink-2 max-w-[50ch] pb-[6px]">
+          </AnimateIn>
+          <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-ink-2 max-w-[50ch] pb-[6px]">
             Across the UK we hold residential blocks, terraced freeholds, mixed-use parades and selected commercial. Each asset is hand-picked, hands-on managed, and held for the long term.
-          </p>
+          </AnimateIn>
         </div>
 
         {/* Filter chips */}
@@ -162,60 +164,63 @@ export default function Portfolio() {
           ))}
         </div>
 
-        {/* Portfolio grid — uniform 3-column; last card spans full width when alone in its row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Portfolio grid */}
+        <AnimateIn stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {visible.map((p, i) => {
             const isLastAlone = i === visible.length - 1 && visible.length % 3 === 1;
             return (
-            <article
-              key={p.id}
-              className={cn(
-                "bg-paper border border-rule flex flex-col transition-transform hover:-translate-y-[2px] hover:shadow-[0_12px_32px_-16px_rgba(23,22,18,0.18)]",
-                isLastAlone && "sm:col-span-2 lg:col-span-3"
-              )}
-            >
-              <div
+              <article
+                key={p.id}
+                onMouseEnter={() => setHoveredId(p.id)}
+                onMouseLeave={() => setHoveredId(null)}
                 className={cn(
-                  "relative overflow-hidden prop-img-bg",
-                  isLastAlone ? "aspect-[21/9]" : "aspect-[4/3]"
+                  "bg-paper border border-rule flex flex-col transition-all duration-300 ease-out hover:-translate-y-[2px] hover:shadow-[0_12px_32px_-16px_rgba(23,22,18,0.18)]",
+                  isLastAlone && "sm:col-span-2 lg:col-span-3",
+                  hoveredId !== null && hoveredId !== p.id && "blur-[2px] scale-[0.98] opacity-80"
                 )}
               >
-                <Image
-                  src={p.img} alt={p.imgAlt} fill
-                  className="object-cover [filter:saturate(0.9)_contrast(1.02)]"
-                  sizes="(max-width:640px) 100vw, (max-width:1080px) 50vw, 33vw"
-                />
-                <span className="absolute top-[14px] left-[14px] font-mono text-[10px] tracking-[0.14em] text-muted bg-paper/70 px-[9px] py-[5px] border border-rule rounded-sm">
-                  {p.id} / 42
-                </span>
-                <span className={cn(
-                  "absolute top-[14px] right-[14px] font-mono text-[9.5px] tracking-[0.14em] uppercase text-paper px-[10px] py-[5px] rounded-full whitespace-nowrap",
-                  p.tagAccent ? "bg-accent" : "bg-ink"
-                )}>
-                  {p.tag}
-                </span>
-              </div>
-              <div className="p-[22px_24px_24px]">
-                <div className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted mb-2 flex justify-between">
-                  <span>{p.location}</span><span>{p.type}</span>
+                <div
+                  className={cn(
+                    "relative overflow-hidden prop-img-bg",
+                    isLastAlone ? "aspect-[21/9]" : "aspect-[4/3]"
+                  )}
+                >
+                  <Image
+                    src={p.img} alt={p.imgAlt} fill
+                    className="object-cover [filter:saturate(0.9)_contrast(1.02)]"
+                    sizes="(max-width:640px) 100vw, (max-width:1080px) 50vw, 33vw"
+                  />
+                  <span className="absolute top-[14px] left-[14px] font-mono text-[10px] tracking-[0.14em] text-muted bg-paper/70 px-[9px] py-[5px] border border-rule rounded-sm">
+                    {p.id} / 42
+                  </span>
+                  <span className={cn(
+                    "absolute top-[14px] right-[14px] font-mono text-[9.5px] tracking-[0.14em] uppercase text-paper px-[10px] py-[5px] rounded-full whitespace-nowrap",
+                    p.tagAccent ? "bg-accent" : "bg-ink"
+                  )}>
+                    {p.tag}
+                  </span>
                 </div>
-                <h4 className="font-serif font-normal text-[26px] leading-[1.05] tracking-[-0.01em] m-0 mb-[6px]">
-                  {p.title}
-                </h4>
-                <p className="text-[13.5px] text-ink-2 leading-[1.5] mb-[18px] min-h-[42px]">{p.desc}</p>
-                <div className="flex justify-between border-t border-rule-soft pt-[14px]">
-                  {p.stats.map(({ l, v }) => (
-                    <div key={l}>
-                      <span className="block font-mono text-[9px] tracking-[0.14em] uppercase text-muted">{l}</span>
-                      <b className="font-serif font-normal text-[18px] tracking-[-0.01em] mt-[2px] block">{v}</b>
-                    </div>
-                  ))}
+                <div className="p-[22px_24px_24px]">
+                  <div className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted mb-2 flex justify-between">
+                    <span>{p.location}</span><span>{p.type}</span>
+                  </div>
+                  <h4 className="font-serif font-normal text-[26px] leading-[1.05] tracking-[-0.01em] m-0 mb-[6px]">
+                    {p.title}
+                  </h4>
+                  <p className="text-[13.5px] text-ink-2 leading-[1.5] mb-[18px] min-h-[42px]">{p.desc}</p>
+                  <div className="flex justify-between border-t border-rule-soft pt-[14px]">
+                    {p.stats.map(({ l, v }) => (
+                      <div key={l}>
+                        <span className="block font-mono text-[9px] tracking-[0.14em] uppercase text-muted">{l}</span>
+                        <b className="font-serif font-normal text-[18px] tracking-[-0.01em] mt-[2px] block">{v}</b>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </article>
+              </article>
             );
           })}
-        </div>
+        </AnimateIn>
 
         <div className="flex justify-between items-center mt-10 pt-7 border-t border-rule">
           <span className="text-[13.5px] text-muted">Showing {visible.length} of 42 holdings across 14 UK markets.</span>
