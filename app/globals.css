@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* kept as CSS vars so components can reference them by name */
+    --bg: #f3efe6;
+    --bg-2: #ebe5d6;
+    --paper: #faf7ef;
+    --ink: #171612;
+    --ink-2: #3a3730;
+    --muted: #6b6759;
+    --rule: #cfc8b6;
+    --rule-soft: #ddd6c4;
+    --accent: #2f4a36;
+    --gold: #8a6d3a;
+    --gold-warm: #d9c89b;
+
+    /* shadcn */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --radius: 0.5rem;
+  }
+
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    background-color: #f3efe6;
+    color: #171612;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+@layer utilities {
+  .wrap {
+    max-width: 1320px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 48px;
+    padding-right: 48px;
+  }
+
+  @media (max-width: 640px) {
+    .wrap {
+      padding-left: 24px;
+      padding-right: 24px;
+    }
+  }
+
+  /* Gradient overlays that can't be expressed cleanly in Tailwind */
+  .hero-stage-overlay {
+    background:
+      linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%),
+      linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 35%);
+  }
+
+  .hero-image-motion {
+    animation: hero-image-motion 14s ease-in-out infinite alternate;
+    transform-origin: center;
+  }
+
+  @keyframes hero-image-motion {
+    from {
+      transform: scale(1.04) translate3d(0, 0, 0);
+    }
+
+    to {
+      transform: scale(1.18) translate3d(-2.5%, -1.5%, 0);
+    }
+  }
+
+  .video-fallback-bg {
+    background-image:
+      linear-gradient(180deg, rgba(14,13,10,0.35) 0%, rgba(14,13,10,0.15) 40%, rgba(14,13,10,0.75) 100%),
+      url("https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=2400&q=85&auto=format&fit=crop");
+    background-size: cover, cover;
+    background-position: center, center;
+  }
+
+  .gallery-cell-overlay {
+    background: linear-gradient(180deg, rgba(0,0,0,0.18) 0%, rgba(0,0,0,0) 22%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.55) 100%);
+  }
+
+  .contact-bg-pattern {
+    background-image: repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 14px, transparent 14px 28px);
+  }
+
+  .top-band {
+    height: 6px;
+    background: linear-gradient(90deg, #2f4a36 0 33%, #8a6d3a 33% 66%, #171612 66%);
+  }
+
+  .prop-img-bg {
+    background-image:
+      repeating-linear-gradient(45deg, rgba(23,22,18,0.03) 0 10px, transparent 10px 20px),
+      linear-gradient(180deg, #e6dec8 0%, #cfc6ac 100%);
+  }
+
+  .acq-img-bg {
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,0.025) 0 12px, transparent 12px 24px),
+      linear-gradient(180deg, #2f2b22 0%, #1c1a15 100%);
+  }
+}
