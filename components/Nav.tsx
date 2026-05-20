@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
+import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { href: "#portfolio", label: "Portfolio" },
@@ -25,6 +26,13 @@ function smoothScroll(id: string) {
 
 export default function Nav() {
   const [active, setActive] = useState("#portfolio");
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    if (menuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
+    return () => { document.body.style.overflow = ""; };
+  }, [menuOpen]);
 
   useEffect(() => {
     const ids = navLinks.map((l) => l.href);
@@ -78,15 +86,52 @@ export default function Nav() {
           </ul>
         </nav>
 
-        {/* CTA */}
+        {/* CTA + hamburger */}
         <div className="flex items-center gap-[18px]">
-          <Button asChild>
+          <Button asChild className="hidden sm:inline-flex">
             <a href="#contact" onClick={smoothScroll("#contact")}>
               Speak with us <ArrowIcon />
             </a>
           </Button>
+          <button
+            className="lg:hidden p-2 -mr-2 text-ink"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((o) => !o)}
+          >
+            {menuOpen ? <X size={22} /> : <Menu size={22} />}
+          </button>
         </div>
       </div>
+
+      {/* Mobile drawer */}
+      {menuOpen && (
+        <nav className="lg:hidden border-t border-rule bg-bg">
+          <ul className="list-none m-0 p-0">
+            {navLinks.map(({ href, label }) => (
+              <li key={href} className="border-b border-rule last:border-b-0">
+                <a
+                  href={href}
+                  onClick={(e) => { smoothScroll(href)(e); setMenuOpen(false); }}
+                  className={cn(
+                    "block px-6 py-4 text-sm text-ink-2 hover:text-ink transition-colors",
+                    active === href && "text-ink font-medium"
+                  )}
+                >
+                  {label}
+                </a>
+              </li>
+            ))}
+            <li className="p-4">
+              <Button asChild className="w-full">
+                <a href="#contact" onClick={(e) => { smoothScroll("#contact")(e); setMenuOpen(false); }}>
+                  Speak with us <ArrowIcon />
+                </a>
+              </Button>
+            </li>
+          </ul>
+        </nav>
+      )}
     </header>
   );
 }
