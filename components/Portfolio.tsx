@@ -8,15 +8,13 @@ import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import AnimateIn from "@/components/AnimateIn";
 import type { PropertyWithImages } from "@/lib/data/properties";
+import { CATEGORY_LABELS, type PropertyCategory } from "@/lib/db/schema";
 
-type FilterKey = "all" | "residential" | "hmo" | "mixed" | "commercial";
+type FilterKey = "all" | PropertyCategory;
 
 const FILTER_LABELS: Record<FilterKey, string> = {
   all: "All",
-  residential: "Residential",
-  hmo: "HMO",
-  mixed: "Mixed-use",
-  commercial: "Commercial",
+  ...CATEGORY_LABELS,
 };
 
 export default function Portfolio({
@@ -104,7 +102,7 @@ export default function Portfolio({
                       "absolute top-[14px] right-[14px] font-mono text-[9.5px] tracking-[0.14em] uppercase text-paper px-[10px] py-[5px] rounded-full whitespace-nowrap",
                       p.tagAccent ? "bg-accent" : "bg-ink"
                     )}>
-                      {p.tag ?? p.category}
+                      {p.tag ?? CATEGORY_LABELS[p.category]}
                     </span>
                   </div>
                   <div className="p-[22px_24px_24px]">
@@ -133,9 +131,6 @@ export default function Portfolio({
 
         <div className="flex justify-between items-center mt-10 pt-7 border-t border-rule">
           <span className="text-[13.5px] text-muted">Showing {visible.length} of {filterCounts.all ?? initialProperties.length} holdings.</span>
-          <Button variant="ghost" asChild>
-            <Link href="/#portfolio">View all holdings <ArrowIcon /></Link>
-          </Button>
         </div>
       </div>
     </section>

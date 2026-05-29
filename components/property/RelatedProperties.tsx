@@ -4,6 +4,7 @@ import AnimateIn from "@/components/AnimateIn";
 import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import type { PropertyWithImages } from "@/lib/data/properties";
+import { CATEGORY_LABELS } from "@/lib/db/schema";
 
 export default function RelatedProperties({ properties }: { properties: PropertyWithImages[] }) {
   if (!properties.length) return null;
@@ -49,7 +50,7 @@ export default function RelatedProperties({ properties }: { properties: Property
                   "absolute top-[14px] right-[14px] font-mono text-[9.5px] tracking-[0.14em] uppercase text-paper px-[10px] py-[5px] rounded-full",
                   p.tagAccent ? "bg-accent" : "bg-ink"
                 )}>
-                  {p.tag ?? p.category}
+                  {p.tag ?? CATEGORY_LABELS[p.category]}
                 </span>
               </div>
               <div className="p-[22px_24px_24px] flex flex-col flex-1">

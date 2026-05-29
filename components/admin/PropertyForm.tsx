@@ -3,14 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PropertyWithImages } from "@/lib/data/properties";
+import { PROPERTY_CATEGORIES, CATEGORY_LABELS } from "@/lib/db/schema";
 
 type ImageRow = { url: string; altText: string; caption: string };
-
-const CATEGORIES = ["residential", "commercial", "hmo", "mixed"] as const;
-const DISPLAY_IN_OPTIONS = [
-  { value: "recently_acquired", label: "Recently Acquired" },
-  { value: "portfolio", label: "Portfolio" },
-];
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
@@ -33,8 +28,6 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
   const [coverImageUrl, setCoverImageUrl] = useState(property?.coverImageUrl ?? "");
   const [coverImageAlt, setCoverImageAlt] = useState(property?.coverImageAlt ?? "");
   const [isPublished, setIsPublished] = useState(property?.isPublished ?? false);
-  const [displayIn, setDisplayIn] = useState<string[]>(property?.displayIn ?? []);
-  const [refCode, setRefCode] = useState(property?.refCode ?? "");
   const [acquisitionDate, setAcquisitionDate] = useState(property?.acquisitionDate ?? "");
   const [images, setImages] = useState<ImageRow[]>(
     property?.images.map((i) => ({ url: i.url, altText: i.altText ?? "", caption: i.caption ?? "" })) ?? []
@@ -45,10 +38,6 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
   function handleTitleChange(v: string) {
     setTitle(v);
     if (!isEdit) setSlug(slugify(v));
-  }
-
-  function toggleDisplayIn(val: string) {
-    setDisplayIn((prev) => prev.includes(val) ? prev.filter((x) => x !== val) : [...prev, val]);
   }
 
   function addImage() {
@@ -72,8 +61,8 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
         title, slug, category, location, type, tag: tag || null, tagAccent,
         address: address || null, description: description || null,
         units: units || null, coverImageUrl: coverImageUrl || null,
-        coverImageAlt: coverImageAlt || null, isPublished, displayIn,
-        refCode: refCode || null, acquisitionDate: acquisitionDate || null,
+        coverImageAlt: coverImageAlt || null, isPublished,
+        acquisitionDate: acquisitionDate || null,
         images: images.filter((i) => i.url),
       };
 
@@ -120,7 +109,7 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
           <div>
             <label className={field}>Category</label>
             <select value={category} onChange={(e) => setCategory(e.target.value)} className={input}>
-              {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+              {PROPERTY_CATEGORIES.map((c) => <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>)}
             </select>
           </div>
           <div>
@@ -151,10 +140,6 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
           <div>
             <label className={field}>Tag / badge label</label>
             <input value={tag} onChange={(e) => setTag(e.target.value)} className={input} placeholder="e.g. Just acquired" />
-          </div>
-          <div>
-            <label className={field}>Ref code</label>
-            <input value={refCode} onChange={(e) => setRefCode(e.target.value)} className={input} placeholder="CB-091" />
           </div>
           <div>
             <label className={field}>Acquisition date</label>
@@ -217,22 +202,6 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
       {/* Publishing */}
       <div className="bg-paper border border-rule p-6 space-y-4">
         <h2 className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted">Publishing</h2>
-        <div>
-          <p className={field + " mb-3"}>Display in</p>
-          <div className="flex gap-6">
-            {DISPLAY_IN_OPTIONS.map((opt) => (
-              <label key={opt.value} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={displayIn.includes(opt.value)}
-                  onChange={() => toggleDisplayIn(opt.value)}
-                  className="w-4 h-4"
-                />
-                <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted">{opt.label}</span>
-              </label>
-            ))}
-          </div>
-        </div>
         <label className="flex items-center gap-3 cursor-pointer">
           <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} className="w-4 h-4" />
           <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted">Published (visible on site)</span>

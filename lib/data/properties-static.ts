@@ -15,7 +15,7 @@ export type Property = {
   location: string;
   region: string;
   type: string;
-  filter: string;
+  filter: "residential" | "commercial" | "industrial" | "retail" | "mixed";
   /** Plain text title — first part before the italic word(s) */
   titlePrefix: string;
   /** The italic green word(s) in the headline */
@@ -28,8 +28,6 @@ export type Property = {
   desc: string;
   stats: PropertyStat[];
   details: PropertyDetail[];
-  ref?: string;
-  displayIn: ("recently_acquired" | "portfolio")[];
   thesisPoints: ThesisPoint[];
   locationHeading: string;
   locationHeadingItalic: string;
@@ -76,8 +74,6 @@ const properties: Property[] = [
       { label: "Management", value: "In-house" },
       { label: "Target IRR", value: "13%" },
     ],
-    ref: "CB-091",
-    displayIn: ["recently_acquired", "portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -126,7 +122,7 @@ const properties: Property[] = [
     location: "Northampton · NN1",
     region: "East Midlands",
     type: "HMO portfolio",
-    filter: "hmo",
+    filter: "residential",
     titlePrefix: "Northampton —",
     italicWord: "sixteen terraced freeholds.",
     imageCaption: "16 freehold houses with",
@@ -147,7 +143,6 @@ const properties: Property[] = [
       { label: "Tenure", value: "Freehold" },
       { label: "Yield", value: "8.7%" },
     ],
-    displayIn: ["recently_acquired", "portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -219,7 +214,6 @@ const properties: Property[] = [
       { label: "Tenure", value: "Freehold" },
       { label: "Annual income", value: "£899,875" },
     ],
-    displayIn: ["recently_acquired", "portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -289,7 +283,6 @@ const properties: Property[] = [
       { label: "Units", value: "12" },
       { label: "Management", value: "In-house" },
     ],
-    displayIn: ["portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -358,7 +351,6 @@ const properties: Property[] = [
       { label: "Tenure", value: "Freehold" },
       { label: "Properties", value: "10" },
     ],
-    displayIn: ["portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -427,7 +419,6 @@ const properties: Property[] = [
       { label: "Tenure", value: "Freehold" },
       { label: "Properties", value: "10" },
     ],
-    displayIn: ["portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -496,7 +487,6 @@ const properties: Property[] = [
       { label: "Yield", value: "8.4%" },
       { label: "Properties", value: "5" },
     ],
-    displayIn: ["portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -567,7 +557,6 @@ const properties: Property[] = [
       { label: "Total sq ft", value: "53,500" },
       { label: "Income p.a.", value: "£401,550" },
     ],
-    displayIn: ["portfolio"],
     thesisPoints: [
       {
         num: "i.",
@@ -636,7 +625,6 @@ const properties: Property[] = [
       { label: "Units", value: "11" },
       { label: "Income p.a.", value: "£187,500" },
     ],
-    displayIn: ["portfolio"],
     thesisPoints: [
       {
         num: "i.",

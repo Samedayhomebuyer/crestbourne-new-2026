@@ -10,6 +10,7 @@ import RelatedProperties from "@/components/property/RelatedProperties";
 import PropertySubscribeCta from "@/components/property/PropertySubscribeCta";
 import MobileActionBar from "@/components/property/MobileActionBar";
 import { getPropertyBySlug, getRelatedProperties } from "@/lib/data/properties";
+import { CATEGORY_LABELS } from "@/lib/db/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -71,9 +72,6 @@ export default async function PropertyDetailPage({ params }: { params: { slug: s
                 <div className="p-[32px_30px_30px]">
                   <div className="flex justify-between items-baseline mb-5">
                     <span className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted">Property details</span>
-                    {property.refCode && (
-                      <span className="font-mono text-[10.5px] tracking-[0.1em] uppercase text-gold">{property.refCode}</span>
-                    )}
                   </div>
 
                   <dl className="m-0">
@@ -81,7 +79,7 @@ export default async function PropertyDetailPage({ params }: { params: { slug: s
                       { label: "Location", value: property.location },
                       property.address ? { label: "Address", value: property.address } : null,
                       { label: "Type", value: property.type },
-                      { label: "Category", value: property.category },
+                      { label: "Category", value: CATEGORY_LABELS[property.category] },
                       property.units ? { label: "Units", value: property.units } : null,
                       property.acquisitionDate ? { label: "Acquired", value: new Date(property.acquisitionDate).toLocaleDateString("en-GB", { month: "long", year: "numeric" }) } : null,
                     ].filter(Boolean).map((d, i) => (
@@ -134,7 +132,7 @@ export default async function PropertyDetailPage({ params }: { params: { slug: s
 
       <Footer />
 
-      <MobileActionBar name={property.title} ref={property.refCode ?? undefined} statLine={statLine} />
+      <MobileActionBar name={property.title} statLine={statLine} />
     </>
   );
 }

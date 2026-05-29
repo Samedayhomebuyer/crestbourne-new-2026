@@ -13,8 +13,6 @@ async function seed() {
   console.log("Seeding properties…");
 
   for (const p of staticProperties) {
-    const displayIn = p.displayIn as string[];
-
     // Determine category from filter key
     const category = p.filter;
 
@@ -42,8 +40,6 @@ async function seed() {
       coverImageUrl:   p.img,
       coverImageAlt:   p.imgAlt,
       isPublished:     true,
-      displayIn,
-      refCode:         p.ref ?? null,
       acquisitionDate: null,
     }).returning();
 

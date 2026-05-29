@@ -81,11 +81,6 @@ export default function PropertyDetailHero({ property: p }: { property: Property
                       {p.tag}{date ? ` · ${date}` : ""}
                     </span>
                   )}
-                  {p.refCode && (
-                    <span className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-[#c5bda1] bg-[rgba(0,0,0,0.4)] px-[12px] py-[7px] border border-[rgba(255,255,255,0.14)] rounded-[2px] backdrop-blur-sm">
-                      Ref: {p.refCode}
-                    </span>
-                  )}
                 </div>
                 <p className="font-serif text-[26px] leading-[1.15] tracking-[-0.01em] text-[#f1ede0] max-w-[40ch] [text-shadow:0_2px_24px_rgba(0,0,0,0.4)] m-0">
                   {p.location}

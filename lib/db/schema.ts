@@ -1,13 +1,28 @@
 import { relations } from "drizzle-orm";
 import {
-  pgTable, uuid, text, boolean, timestamp, integer, date,
+  pgTable, pgEnum, uuid, text, boolean, timestamp, integer, date,
 } from "drizzle-orm/pg-core";
+
+export const propertyCategoryEnum = pgEnum("property_category", [
+  "residential", "commercial", "industrial", "retail", "mixed",
+]);
+
+export const PROPERTY_CATEGORIES = propertyCategoryEnum.enumValues;
+export type PropertyCategory = typeof PROPERTY_CATEGORIES[number];
+
+export const CATEGORY_LABELS: Record<PropertyCategory, string> = {
+  residential: "Residential",
+  commercial:  "Commercial",
+  industrial:  "Industrial",
+  retail:      "Retail",
+  mixed:       "Mixed-use",
+};
 
 export const properties = pgTable("properties", {
   id:              uuid("id").primaryKey().defaultRandom(),
   slug:            text("slug").notNull().unique(),
   title:           text("title").notNull(),
-  category:        text("category").notNull(), // residential | commercial | hmo | mixed
+  category:        propertyCategoryEnum("category").notNull(),
   location:        text("location").notNull(),
   type:            text("type").notNull(),      // display label e.g. "Residential portfolio"
   tag:             text("tag"),                 // badge label e.g. "Flagship"
@@ -18,8 +33,6 @@ export const properties = pgTable("properties", {
   coverImageUrl:   text("cover_image_url"),
   coverImageAlt:   text("cover_image_alt"),
   isPublished:     boolean("is_published").default(false).notNull(),
-  displayIn:       text("display_in").array().default([]),
-  refCode:         text("ref_code"),
   acquisitionDate: date("acquisition_date"),
   createdAt:       timestamp("created_at").defaultNow().notNull(),
   updatedAt:       timestamp("updated_at").defaultNow().notNull(),

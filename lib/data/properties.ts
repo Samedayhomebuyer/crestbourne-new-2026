@@ -1,5 +1,7 @@
+import { unstable_noStore as noStore } from "next/cache";
 import { db } from "@/lib/db";
 import { properties, propertyImages } from "@/lib/db/schema";
+import type { PropertyCategory } from "@/lib/db/schema";
 import { eq, desc, inArray } from "drizzle-orm";
 
 export type PropertyWithImages = typeof properties.$inferSelect & {
@@ -7,6 +9,7 @@ export type PropertyWithImages = typeof properties.$inferSelect & {
 };
 
 export async function getAllProperties(): Promise<PropertyWithImages[]> {
+  noStore();
   const rows = await db.query.properties.findMany({
     orderBy: [desc(properties.createdAt)],
     with: { images: { orderBy: [propertyImages.displayOrder] } },
@@ -15,6 +18,7 @@ export async function getAllProperties(): Promise<PropertyWithImages[]> {
 }
 
 export async function getPublishedProperties(): Promise<PropertyWithImages[]> {
+  noStore();
   const props = await db
     .select()
     .from(properties)
@@ -63,7 +67,7 @@ export async function getPropertyBySlug(slug: string): Promise<PropertyWithImage
   return (row as PropertyWithImages) ?? null;
 }
 
-export async function getRelatedProperties(slug: string, category: string, count = 3) {
+export async function getRelatedProperties(slug: string, category: PropertyCategory, count = 3) {
   const all = await getPublishedProperties();
   const sameCategory = all.filter((p) => p.slug !== slug && p.category === category);
   const others = all.filter((p) => p.slug !== slug && p.category !== category);

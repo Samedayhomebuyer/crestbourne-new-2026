@@ -5,11 +5,9 @@ import { ArrowIcon } from "@/components/icons";
 
 export default function MobileActionBar({
   name,
-  ref: refCode,
   statLine,
 }: {
   name: string;
-  ref?: string;
   statLine: string;
 }) {
   const [show, setShow] = useState(false);
@@ -47,7 +45,7 @@ export default function MobileActionBar({
         <div>
           <div className="font-serif text-[18px] text-ink leading-[1.1]">{name}</div>
           <div className="font-mono text-[9px] tracking-[0.12em] uppercase text-muted">
-            {refCode ? `Ref ${refCode} · ` : ""}{statLine}
+            {statLine}
           </div>
         </div>
         <a
