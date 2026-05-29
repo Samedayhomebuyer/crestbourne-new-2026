@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
+import AnimateIn from "@/components/AnimateIn";
 
 const companies = [
   "Bluesky Properties Estates Ltd",
@@ -40,7 +41,7 @@ export default function GroupStructure() {
     <section id="group" className="py-24 bg-bg-2">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-[60px] items-end mb-14">
-          <div>
+          <AnimateIn>
             <div className="font-mono text-[11px] tracking-widest2 uppercase text-muted flex items-center">
               <span className="inline-block w-[6px] h-[6px] rounded-full bg-accent mr-[10px] translate-y-[1px]" />
               The Group
@@ -48,14 +49,13 @@ export default function GroupStructure() {
             <h2 className="font-serif font-normal text-[clamp(48px,5.5vw,80px)] leading-[0.98] tracking-[-0.02em] mt-4">
               39 Companies,<br /><em className="italic text-accent">One Vision.</em>
             </h2>
-          </div>
-          <p className="text-[17px] leading-[1.6] text-ink-2 max-w-[50ch] pb-[6px]">
+          </AnimateIn>
+          <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-ink-2 max-w-[50ch] pb-[6px]">
             A comprehensive network of specialised property companies working together to deliver exceptional value across every aspect of UK real estate investment and development.
-          </p>
+          </AnimateIn>
         </div>
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-px border border-rule bg-rule mb-16">
+        <AnimateIn stagger className="grid grid-cols-3 gap-px border border-rule bg-rule mb-16">
           {stats.map((s) => (
             <div key={s.label} className="bg-paper px-8 py-10">
               <div className="font-serif text-[clamp(40px,4vw,64px)] leading-[1] tracking-[-0.02em] text-ink mb-2">
@@ -64,10 +64,9 @@ export default function GroupStructure() {
               <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted">{s.label}</div>
             </div>
           ))}
-        </div>
+        </AnimateIn>
 
         <div className="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-16 items-start">
-          {/* Company grid */}
           <div>
             <div className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted mb-6">
               Group Companies
@@ -84,7 +83,6 @@ export default function GroupStructure() {
             </div>
           </div>
 
-          {/* Text */}
           <div className="lg:pt-10">
             <p className="font-serif text-[28px] leading-[1.25] tracking-[-0.01em] text-ink mb-7">
               Each company specialises in a specific aspect of property investment, development, and management — creating a comprehensive ecosystem of real estate expertise.

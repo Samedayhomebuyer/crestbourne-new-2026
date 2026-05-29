@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
+import AnimateIn from "@/components/AnimateIn";
 
 const details = [
   { label: "Address", value: <>First Floor, <em className="italic">Winston House</em><br />349 Regents Park Rd<br />London N3 1DH</> },
@@ -12,8 +13,7 @@ export default function Contact() {
     <section id="contact" className="py-24 bg-accent text-[#f1ede0] relative overflow-hidden">
       <div className="absolute inset-0 contact-bg-pattern pointer-events-none" />
       <div className="wrap relative grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-20 items-start">
-        {/* Left */}
-        <div>
+        <AnimateIn>
           <div className="font-mono text-[11px] tracking-widest2 uppercase text-[#c9d4c0] flex items-center">
             <span className="inline-block w-[6px] h-[6px] rounded-full bg-gold-warm mr-[10px] translate-y-[1px]" />
             Get in touch
@@ -36,17 +36,16 @@ export default function Contact() {
               <a href="#">Submit a property</a>
             </Button>
           </div>
-        </div>
+        </AnimateIn>
 
-        {/* Contact card */}
-        <aside className="bg-white/[0.06] border border-white/[0.18] p-[36px_36px_32px] backdrop-blur-md">
+        <AnimateIn as="aside" delay={150} className="bg-white/[0.06] border border-white/[0.18] p-[36px_36px_32px] backdrop-blur-md">
           {details.map((d) => (
             <div key={d.label} className="flex justify-between gap-4 py-[18px] border-b border-white/[0.14] last:border-b-0">
               <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-[#9eb098] whitespace-nowrap">{d.label}</span>
               <span className="font-serif text-[22px] tracking-[-0.01em] text-[#f1ede0] text-right leading-[1.3]">{d.value}</span>
             </div>
           ))}
-        </aside>
+        </AnimateIn>
       </div>
     </section>
   );

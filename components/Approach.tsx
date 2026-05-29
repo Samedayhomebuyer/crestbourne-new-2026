@@ -1,4 +1,5 @@
 import Image from "next/image";
+import AnimateIn from "@/components/AnimateIn";
 
 const pillars = [
   {
@@ -24,7 +25,6 @@ const pillars = [
 export default function Approach() {
   return (
     <section id="approach" className="relative py-24 overflow-hidden">
-      {/* Background image */}
       <Image
         src="https://images.unsplash.com/photo-1512359953714-f0c9a632ab85?q=80&w=1390&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         alt=""
@@ -33,12 +33,11 @@ export default function Approach() {
         sizes="100vw"
         priority
       />
-      {/* Dark overlay */}
       <div className="absolute inset-0 bg-ink/85" />
 
       <div className="wrap relative z-10">
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-[60px] items-end mb-14">
-          <div>
+          <AnimateIn>
             <div className="font-mono text-[11px] tracking-widest2 uppercase text-white/60 flex items-center">
               <span className="inline-block w-[6px] h-[6px] rounded-full bg-gold-warm mr-[10px] translate-y-[1px]" />
               Our Approach
@@ -46,13 +45,13 @@ export default function Approach() {
             <h2 className="font-serif font-normal text-[clamp(48px,5.5vw,80px)] leading-[0.98] tracking-[-0.02em] mt-4 text-white">
               Three principles,<br />held <em className="italic text-gold-warm">quietly.</em>
             </h2>
-          </div>
-          <p className="text-[17px] leading-[1.6] text-white/80 max-w-[50ch] pb-[6px]">
+          </AnimateIn>
+          <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-white/80 max-w-[50ch] pb-[6px]">
             We don&apos;t chase trends, leverage to the limit, or scale at the expense of returns. The Crestbourne playbook is unfashionably patient — and has compounded steadily for 28 years.
-          </p>
+          </AnimateIn>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-7">
+        <AnimateIn stagger className="grid grid-cols-1 lg:grid-cols-3 gap-7">
           {pillars.map((p) => (
             <div key={p.num} className="bg-ink/80 border border-white/15 backdrop-blur-md p-[36px_32px_32px] flex flex-col min-h-[340px]">
               <span className="font-serif italic text-[48px] text-gold-warm leading-none tracking-[-0.02em]">{p.num}</span>
@@ -67,7 +66,7 @@ export default function Approach() {
               </div>
             </div>
           ))}
-        </div>
+        </AnimateIn>
       </div>
     </section>
   );

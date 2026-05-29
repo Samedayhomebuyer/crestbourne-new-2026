@@ -1,3 +1,5 @@
+import AnimateIn from "@/components/AnimateIn";
+
 const partners = [
   "Knight & Bell",
   "Allsop Partners",
@@ -9,7 +11,7 @@ const partners = [
 
 export default function Partners() {
   return (
-    <div className="border-t border-b border-rule py-[22px] bg-bg-2">
+    <AnimateIn className="border-t border-b border-rule py-[22px] bg-bg-2">
       <div className="wrap flex items-center gap-11 flex-wrap justify-between">
         <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted whitespace-nowrap">
           Working alongside
@@ -22,6 +24,6 @@ export default function Partners() {
           ))}
         </div>
       </div>
-    </div>
+    </AnimateIn>
   );
 }

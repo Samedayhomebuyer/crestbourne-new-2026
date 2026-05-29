@@ -1,3 +1,5 @@
+import AnimateIn from "@/components/AnimateIn";
+
 const stats = [
   { label: "Founded", big: <><em className="italic text-accent">1997</em></>, sub: "Family-led, principal-aligned since inception." },
   { label: "Portfolio GDV", big: <>£420<span className="text-[38px]">m</span></>, sub: "Across 42 assets in 14 UK markets." },
@@ -10,7 +12,7 @@ export default function TrackRecord() {
     <section id="record" className="py-24 bg-bg-2">
       <div className="wrap">
         <div className="grid grid-cols-1 lg:grid-cols-[0.9fr_1.1fr] gap-[60px] items-end mb-14">
-          <div>
+          <AnimateIn>
             <div className="font-mono text-[11px] tracking-widest2 uppercase text-muted flex items-center">
               <span className="inline-block w-[6px] h-[6px] rounded-full bg-accent mr-[10px] translate-y-[1px]" />
               The Numbers
@@ -18,13 +20,13 @@ export default function TrackRecord() {
             <h2 className="font-serif font-normal text-[clamp(48px,5.5vw,80px)] leading-[0.98] tracking-[-0.02em] mt-4">
               Twenty-nine years.<br />One <em className="italic text-accent">thesis.</em>
             </h2>
-          </div>
-          <p className="text-[17px] leading-[1.6] text-ink-2 max-w-[50ch] pb-[6px]">
+          </AnimateIn>
+          <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-ink-2 max-w-[50ch] pb-[6px]">
             We have compounded patient capital through three property cycles by holding what we buy, managing what we hold, and selling only when the market overpays.
-          </p>
+          </AnimateIn>
         </div>
 
-        <div className="grid grid-cols-2 lg:grid-cols-4 border-t border-b border-rule">
+        <AnimateIn stagger className="grid grid-cols-2 lg:grid-cols-4 border-t border-b border-rule">
           {stats.map((s, i) => (
             <div
               key={s.label}
@@ -37,7 +39,7 @@ export default function TrackRecord() {
               <span className="block text-[13px] text-ink-2 leading-[1.5] max-w-[24ch]">{s.sub}</span>
             </div>
           ))}
-        </div>
+        </AnimateIn>
       </div>
     </section>
   );
