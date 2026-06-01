@@ -1,7 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET = new TextEncoder().encode(process.env.NEON_AUTH_COOKIE_SECRET!);
+const SECRET = new TextEncoder().encode(process.env.ADMIN_COOKIE_SECRET!);
 const COOKIE = "cb.admin";
 
 export async function createSession(email: string) {

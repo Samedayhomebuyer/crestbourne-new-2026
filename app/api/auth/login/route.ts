@@ -1,23 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createHash, timingSafeEqual } from "crypto";
+import { compare } from "bcryptjs";
 import { createSession } from "@/lib/auth/server";
-
-function sha256(s: string) {
-  return createHash("sha256").update(s).digest("hex");
-}
 
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
-  const expectedHash = process.env.ADMIN_PASSWORD_HASH ?? "";
-  const actualHash = sha256(password ?? "");
+  const hash = process.env.ADMIN_PASSWORD_HASH ?? "";
   const emailMatch = email === process.env.ADMIN_EMAIL;
-  const hashMatch = expectedHash.length > 0 && timingSafeEqual(
-    Buffer.from(actualHash),
-    Buffer.from(expectedHash)
-  );
+  const passwordMatch = hash.length > 0 && await compare(password ?? "", hash);
 
-  if (!emailMatch || !hashMatch) {
+  if (!emailMatch || !passwordMatch) {
     return NextResponse.json({ error: "Invalid credentials" }, { status: 401 });
   }
 

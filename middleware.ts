@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { jwtVerify } from "jose";
 
-const SECRET = new TextEncoder().encode(process.env.NEON_AUTH_COOKIE_SECRET!);
+const SECRET = new TextEncoder().encode(process.env.ADMIN_COOKIE_SECRET!);
 
 export async function middleware(req: NextRequest) {
   if (req.nextUrl.pathname === "/admin/login") return NextResponse.next();
