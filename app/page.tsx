@@ -9,7 +9,8 @@ import Approach from "@/components/Approach";
 import GroupStructure from "@/components/GroupStructure";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
-import { getRecentlyAcquired, getPortfolioProperties } from "@/lib/data/properties";
+import { getRecentlyAcquired, getPortfolioProperties, pickRandom } from "@/lib/data/properties";
+import { CATEGORY_LABELS } from "@/lib/db/schema";
 
 export const dynamic = "force-dynamic";
 
@@ -19,10 +20,16 @@ export default async function Home() {
     getPortfolioProperties(),
   ]);
 
+  const tickerItems = pickRandom(properties, 6).map((p) => ({
+    id: p.id,
+    tag: p.tag ?? CATEGORY_LABELS[p.category].split(/[\s-]/)[0].toUpperCase(),
+    text: p.title,
+  }));
+
   return (
     <>
       <Nav />
-      <Ticker />
+      <Ticker items={tickerItems} />
       <Hero />
       <Partners />
       <RecentlyAcquired cards={cards} />

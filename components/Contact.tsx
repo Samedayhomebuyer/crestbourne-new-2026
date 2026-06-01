@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 import AnimateIn from "@/components/AnimateIn";
+import ContactDrawer from "@/components/ContactDrawer";
 
 const details = [
   { label: "Address", value: <>First Floor, <em className="italic">Winston House</em><br />349 Regents Park Rd<br />London N3 1DH</> },
@@ -9,6 +13,7 @@ const details = [
 ];
 
 export default function Contact() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <section id="contact" className="py-24 bg-accent text-[#f1ede0] relative overflow-hidden">
       <div className="absolute inset-0 contact-bg-pattern pointer-events-none" />
@@ -27,13 +32,8 @@ export default function Contact() {
             working days.
           </p>
           <div className="flex gap-[14px] flex-wrap">
-            <Button variant="contact-default" asChild>
-              <a href="mailto:info@crestbourne.co.uk">
-                Email the office <ArrowIcon />
-              </a>
-            </Button>
-            <Button variant="contact-ghost" asChild>
-              <a href="#">Submit a property</a>
+            <Button variant="contact-default" onClick={() => setDrawerOpen(true)}>
+              Message us <ArrowIcon />
             </Button>
           </div>
         </AnimateIn>
@@ -47,6 +47,7 @@ export default function Contact() {
           ))}
         </AnimateIn>
       </div>
+      <ContactDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </section>
   );
 }

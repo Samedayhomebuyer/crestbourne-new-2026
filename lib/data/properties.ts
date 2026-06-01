@@ -41,6 +41,18 @@ export async function getPublishedProperties(): Promise<PropertyWithImages[]> {
   return props.map((p) => ({ ...p, images: byId[p.id] ?? [] }));
 }
 
+/** Fisher–Yates sample of up to `count` items (new array, does not mutate input). */
+export function pickRandom<T>(items: T[], count: number): T[] {
+  if (!items.length) return [];
+  const n = Math.min(count, items.length);
+  const copy = [...items];
+  for (let i = copy.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [copy[i], copy[j]] = [copy[j], copy[i]];
+  }
+  return copy.slice(0, n);
+}
+
 export async function getRecentlyAcquired() {
   const all = await getPublishedProperties();
   return {
@@ -62,6 +74,15 @@ export async function getPortfolioProperties() {
 export async function getPropertyBySlug(slug: string): Promise<PropertyWithImages | null> {
   const row = await db.query.properties.findFirst({
     where: eq(properties.slug, slug),
+    with: { images: { orderBy: [propertyImages.displayOrder] } },
+  });
+  return (row as PropertyWithImages) ?? null;
+}
+
+export async function getPropertyById(id: string): Promise<PropertyWithImages | null> {
+  noStore();
+  const row = await db.query.properties.findFirst({
+    where: eq(properties.id, id),
     with: { images: { orderBy: [propertyImages.displayOrder] } },
   });
   return (row as PropertyWithImages) ?? null;

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PropertyWithImages } from "@/lib/data/properties";
-import { PROPERTY_CATEGORIES, CATEGORY_LABELS } from "@/lib/db/schema";
+import { PROPERTY_CATEGORIES, CATEGORY_LABELS, type PropertyCategory } from "@/lib/db/schema";
 
 type ImageRow = { url: string; altText: string; caption: string };
 
@@ -11,45 +11,122 @@ function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
 }
 
-export default function PropertyForm({ property }: { property?: PropertyWithImages }) {
-  const router = useRouter();
-  const isEdit = !!property;
+function formatDateInput(value: string | Date | null | undefined) {
+  if (!value) return "";
+  if (value instanceof Date) return value.toISOString().slice(0, 10);
+  return String(value).slice(0, 10);
+}
 
-  const [title, setTitle] = useState(property?.title ?? "");
-  const [slug, setSlug] = useState(property?.slug ?? "");
-  const [category, setCategory] = useState(property?.category ?? "residential");
-  const [location, setLocation] = useState(property?.location ?? "");
-  const [type, setType] = useState(property?.type ?? "");
-  const [tag, setTag] = useState(property?.tag ?? "");
-  const [tagAccent, setTagAccent] = useState(property?.tagAccent ?? false);
-  const [address, setAddress] = useState(property?.address ?? "");
-  const [description, setDescription] = useState(property?.description ?? "");
-  const [units, setUnits] = useState(property?.units ?? "");
-  const [coverImageUrl, setCoverImageUrl] = useState(property?.coverImageUrl ?? "");
-  const [coverImageAlt, setCoverImageAlt] = useState(property?.coverImageAlt ?? "");
-  const [isPublished, setIsPublished] = useState(property?.isPublished ?? false);
-  const [acquisitionDate, setAcquisitionDate] = useState(property?.acquisitionDate ?? "");
-  const [images, setImages] = useState<ImageRow[]>(
-    property?.images.map((i) => ({ url: i.url, altText: i.altText ?? "", caption: i.caption ?? "" })) ?? []
-  );
+function propertyToFormState(property: PropertyWithImages) {
+  return {
+    title: property.title ?? "",
+    slug: property.slug ?? "",
+    category: property.category ?? "residential",
+    location: property.location ?? "",
+    type: property.type ?? "",
+    tag: property.tag ?? "",
+    tagAccent: property.tagAccent ?? false,
+    address: property.address ?? "",
+    description: property.description ?? "",
+    units: property.units ?? "",
+    coverImageUrl: property.coverImageUrl ?? "",
+    coverImageAlt: property.coverImageAlt ?? "",
+    isPublished: property.isPublished ?? false,
+    acquisitionDate: formatDateInput(property.acquisitionDate),
+    images: (property.images ?? []).map((i) => ({
+      url: i.url,
+      altText: i.altText ?? "",
+      caption: i.caption ?? "",
+    })),
+  };
+}
+
+type FormState = ReturnType<typeof propertyToFormState>;
+
+const emptyFormState: FormState = {
+  title: "",
+  slug: "",
+  category: "residential",
+  location: "",
+  type: "",
+  tag: "",
+  tagAccent: false,
+  address: "",
+  description: "",
+  units: "",
+  coverImageUrl: "",
+  coverImageAlt: "",
+  isPublished: false,
+  acquisitionDate: "",
+  images: [],
+};
+
+export default function PropertyForm({ propertyId }: { propertyId?: string }) {
+  const router = useRouter();
+  const isEdit = !!propertyId;
+
+  const [form, setForm] = useState<FormState>(emptyFormState);
+  const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
+  useEffect(() => {
+    if (!propertyId) return;
+
+    let cancelled = false;
+
+    async function loadProperty() {
+      setLoading(true);
+      setError("");
+      try {
+        const res = await fetch(`/api/properties/${propertyId}`);
+        if (!res.ok) throw new Error(await res.text());
+        const property = (await res.json()) as PropertyWithImages;
+        if (!cancelled) setForm(propertyToFormState(property));
+      } catch (err) {
+        if (!cancelled) setError(String(err));
+      } finally {
+        if (!cancelled) setLoading(false);
+      }
+    }
+
+    loadProperty();
+    return () => {
+      cancelled = true;
+    };
+  }, [propertyId]);
+
+  function updateField<K extends keyof FormState>(key: K, value: FormState[K]) {
+    setForm((prev) => ({ ...prev, [key]: value }));
+  }
+
   function handleTitleChange(v: string) {
-    setTitle(v);
-    if (!isEdit) setSlug(slugify(v));
+    setForm((prev) => ({
+      ...prev,
+      title: v,
+      slug: isEdit ? prev.slug : slugify(v),
+    }));
   }
 
   function addImage() {
-    setImages((prev) => [...prev, { url: "", altText: "", caption: "" }]);
+    setForm((prev) => ({
+      ...prev,
+      images: [...prev.images, { url: "", altText: "", caption: "" }],
+    }));
   }
 
   function updateImage(i: number, field: keyof ImageRow, val: string) {
-    setImages((prev) => prev.map((row, idx) => idx === i ? { ...row, [field]: val } : row));
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.map((row, idx) => (idx === i ? { ...row, [field]: val } : row)),
+    }));
   }
 
   function removeImage(i: number) {
-    setImages((prev) => prev.filter((_, idx) => idx !== i));
+    setForm((prev) => ({
+      ...prev,
+      images: prev.images.filter((_, idx) => idx !== i),
+    }));
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -58,15 +135,24 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
     setSaving(true);
     try {
       const payload = {
-        title, slug, category, location, type, tag: tag || null, tagAccent,
-        address: address || null, description: description || null,
-        units: units || null, coverImageUrl: coverImageUrl || null,
-        coverImageAlt: coverImageAlt || null, isPublished,
-        acquisitionDate: acquisitionDate || null,
-        images: images.filter((i) => i.url),
+        title: form.title,
+        slug: form.slug,
+        category: form.category,
+        location: form.location,
+        type: form.type,
+        tag: form.tag || null,
+        tagAccent: form.tagAccent,
+        address: form.address || null,
+        description: form.description || null,
+        units: form.units || null,
+        coverImageUrl: form.coverImageUrl || null,
+        coverImageAlt: form.coverImageAlt || null,
+        isPublished: form.isPublished,
+        acquisitionDate: form.acquisitionDate || null,
+        images: form.images.filter((i) => i.url),
       };
 
-      const url = isEdit ? `/api/properties/${property!.id}` : "/api/properties";
+      const url = isEdit ? `/api/properties/${propertyId}` : "/api/properties";
       const method = isEdit ? "PATCH" : "POST";
       const res = await fetch(url, {
         method,
@@ -87,6 +173,14 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
   const field = "block font-mono text-[10px] tracking-[0.12em] uppercase text-muted mb-2";
   const input = "w-full px-3 py-2 bg-white border border-rule text-ink text-[14px] focus:outline-none focus:border-ink transition-colors";
 
+  if (loading) {
+    return (
+      <p className="font-mono text-[11px] tracking-[0.12em] uppercase text-muted">
+        Loading property…
+      </p>
+    );
+  }
+
   return (
     <form onSubmit={handleSubmit} className="space-y-8">
       {/* Core */}
@@ -96,40 +190,40 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={field}>Title</label>
-            <input value={title} onChange={(e) => handleTitleChange(e.target.value)} required className={input} />
+            <input value={form.title} onChange={(e) => handleTitleChange(e.target.value)} required className={input} />
           </div>
           <div>
             <label className={field}>Slug</label>
-            <input value={slug} onChange={(e) => setSlug(e.target.value)} required className={input} />
+            <input value={form.slug} onChange={(e) => updateField("slug", e.target.value)} required className={input} />
           </div>
           <div>
             <label className={field}>Location</label>
-            <input value={location} onChange={(e) => setLocation(e.target.value)} required className={input} placeholder="e.g. Chesterfield & Mansfield" />
+            <input value={form.location} onChange={(e) => updateField("location", e.target.value)} required className={input} placeholder="e.g. Chesterfield & Mansfield" />
           </div>
           <div>
             <label className={field}>Category</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className={input}>
+            <select value={form.category} onChange={(e) => updateField("category", e.target.value as PropertyCategory)} className={input}>
               {PROPERTY_CATEGORIES.map((c) => <option key={c} value={c}>{CATEGORY_LABELS[c]}</option>)}
             </select>
           </div>
           <div>
             <label className={field}>Type (display label)</label>
-            <input value={type} onChange={(e) => setType(e.target.value)} className={input} placeholder="e.g. Residential portfolio" />
+            <input value={form.type} onChange={(e) => updateField("type", e.target.value)} className={input} placeholder="e.g. Residential portfolio" />
           </div>
           <div>
             <label className={field}>Units</label>
-            <input value={units} onChange={(e) => setUnits(e.target.value)} className={input} placeholder="e.g. 68" />
+            <input value={form.units} onChange={(e) => updateField("units", e.target.value)} className={input} placeholder="e.g. 68" />
           </div>
         </div>
 
         <div>
           <label className={field}>Address (optional)</label>
-          <input value={address} onChange={(e) => setAddress(e.target.value)} className={input} placeholder="Specific address if applicable" />
+          <input value={form.address} onChange={(e) => updateField("address", e.target.value)} className={input} placeholder="Specific address if applicable" />
         </div>
 
         <div>
           <label className={field}>Description</label>
-          <textarea value={description} onChange={(e) => setDescription(e.target.value)} rows={4} className={input + " resize-y"} />
+          <textarea value={form.description} onChange={(e) => updateField("description", e.target.value)} rows={4} className={input + " resize-y"} />
         </div>
       </div>
 
@@ -139,15 +233,15 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div>
             <label className={field}>Tag / badge label</label>
-            <input value={tag} onChange={(e) => setTag(e.target.value)} className={input} placeholder="e.g. Just acquired" />
+            <input value={form.tag} onChange={(e) => updateField("tag", e.target.value)} className={input} placeholder="e.g. Just acquired" />
           </div>
           <div>
             <label className={field}>Acquisition date</label>
-            <input type="date" value={acquisitionDate} onChange={(e) => setAcquisitionDate(e.target.value)} className={input} />
+            <input type="date" value={form.acquisitionDate} onChange={(e) => updateField("acquisitionDate", e.target.value)} className={input} />
           </div>
         </div>
         <label className="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" checked={tagAccent} onChange={(e) => setTagAccent(e.target.checked)} className="w-4 h-4" />
+          <input type="checkbox" checked={form.tagAccent} onChange={(e) => updateField("tagAccent", e.target.checked)} className="w-4 h-4" />
           <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted">Green accent badge (flagship / just acquired)</span>
         </label>
       </div>
@@ -158,16 +252,16 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
             <label className={field}>Cover image URL</label>
-            <input value={coverImageUrl} onChange={(e) => setCoverImageUrl(e.target.value)} className={input} placeholder="https://..." />
+            <input value={form.coverImageUrl} onChange={(e) => updateField("coverImageUrl", e.target.value)} className={input} placeholder="https://..." />
           </div>
           <div>
             <label className={field}>Cover image alt text</label>
-            <input value={coverImageAlt} onChange={(e) => setCoverImageAlt(e.target.value)} className={input} />
+            <input value={form.coverImageAlt} onChange={(e) => updateField("coverImageAlt", e.target.value)} className={input} />
           </div>
         </div>
-        {coverImageUrl && (
+        {form.coverImageUrl && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={coverImageUrl} alt={coverImageAlt} className="h-40 w-full object-cover border border-rule" />
+          <img src={form.coverImageUrl} alt={form.coverImageAlt} className="h-40 w-full object-cover border border-rule" />
         )}
       </div>
 
@@ -179,10 +273,10 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
             + Add image
           </button>
         </div>
-        {images.length === 0 && (
+        {form.images.length === 0 && (
           <p className="font-mono text-[10px] tracking-[0.1em] uppercase text-muted/60">No gallery images yet.</p>
         )}
-        {images.map((img, i) => (
+        {form.images.map((img, i) => (
           <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end border-t border-rule-soft pt-4">
             <div>
               <label className={field}>Image URL</label>
@@ -203,7 +297,7 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
       <div className="bg-paper border border-rule p-6 space-y-4">
         <h2 className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted">Publishing</h2>
         <label className="flex items-center gap-3 cursor-pointer">
-          <input type="checkbox" checked={isPublished} onChange={(e) => setIsPublished(e.target.checked)} className="w-4 h-4" />
+          <input type="checkbox" checked={form.isPublished} onChange={(e) => updateField("isPublished", e.target.checked)} className="w-4 h-4" />
           <span className="font-mono text-[11px] tracking-[0.1em] uppercase text-muted">Published (visible on site)</span>
         </label>
       </div>
@@ -213,7 +307,7 @@ export default function PropertyForm({ property }: { property?: PropertyWithImag
       <div className="flex gap-4">
         <button
           type="submit"
-          disabled={saving}
+          disabled={saving || loading}
           className="px-8 py-3 bg-ink text-paper font-mono text-[11px] tracking-[0.14em] uppercase hover:bg-ink-2 transition-colors disabled:opacity-50"
         >
           {saving ? "Saving…" : isEdit ? "Save changes" : "Create property"}

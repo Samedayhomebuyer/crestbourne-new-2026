@@ -2,20 +2,10 @@ const links = {
   Portfolio: [
     { label: "Recently Acquired", href: "#acquired" },
     { label: "All Holdings", href: "#portfolio" },
-    { label: "Deal Log", href: "#" },
-    { label: "Realised Exits", href: "#" },
   ],
   "The Group": [
     { label: "Approach", href: "#approach" },
     { label: "Group Companies", href: "#group" },
-    { label: "Principals", href: "#" },
-    { label: "Press", href: "#" },
-  ],
-  Connect: [
-    { label: "Contact", href: "#contact" },
-    { label: "Submit a property", href: "#" },
-    { label: "Investor login", href: "#" },
-    { label: "Quarterly letter", href: "#" },
   ],
 };
 
@@ -60,15 +50,10 @@ export default function Footer() {
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 font-mono text-[10px] tracking-[0.14em] uppercase text-[#6e6753]">
-          <span>© 2026 The Crestbourne Group Ltd · Company No. 16635233</span>
-          <span className="flex gap-2">
-            {["Privacy", "Terms", "Regulatory"].map((l, i) => (
-              <span key={l} className="flex items-center gap-2">
-                {i > 0 && <span>·</span>}
-                <a href="#" className="text-[#9d957f] hover:text-[#f1ede0] transition-colors">{l}</a>
-              </span>
-            ))}
+          <span>
+            © 2026 <a href="https://www.breezeflowai.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Breezeflowai</a>
           </span>
+     
         </div>
       </div>
     </footer>

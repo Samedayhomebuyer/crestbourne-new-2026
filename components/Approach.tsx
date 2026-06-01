@@ -47,7 +47,7 @@ export default function Approach() {
             </h2>
           </AnimateIn>
           <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-white/80 max-w-[50ch] pb-[6px]">
-            We don&apos;t chase trends, leverage to the limit, or scale at the expense of returns. The Crestbourne playbook is unfashionably patient — and has compounded steadily for 28 years.
+            We don&apos;t chase trends, leverage to the limit, or scale at the expense of returns. The Crestbourne playbook is unfashionably patient - and has compounded steadily for 28 years.
           </AnimateIn>
         </div>
 

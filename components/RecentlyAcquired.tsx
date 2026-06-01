@@ -15,28 +15,30 @@ function PropertyCard({ card }: { card: PropertyWithImages }) {
   const date = formatDate(card.acquisitionDate);
 
   return (
-    <Link href={`/properties/${card.slug}`} className="block w-full relative hover:z-10">
-      <CardContainer containerClassName="py-20 w-full">
-        <CardBody className="relative group/card w-full h-auto rounded-xl border border-[#2b2823] bg-[#1f1d18] p-7 dark:border-[#2b2823]">
+    <Link href={`/properties/${card.slug}`} className="block w-full h-full relative hover:z-10">
+      <CardContainer containerClassName="py-20 w-full h-full" className="h-full w-full" rotateSensitivity={20}>
+        <CardBody className="relative group/card w-full h-full flex flex-col rounded-xl border border-[#2b2823] bg-[#1f1d18] p-7 dark:border-[#2b2823]">
 
           {/* Tag + date row */}
-          <CardItem translateZ={30} className="w-full flex items-center justify-between mb-4">
+          <CardItem translateZ={18} className="w-full flex items-center justify-between mb-4 min-h-[26px]">
             {card.tag ? (
               <span className="px-3 py-[5px] rounded-full font-mono text-[10px] tracking-[0.14em] uppercase font-medium bg-gold-warm text-[#1c1a15]">
                 {card.tag}
               </span>
             ) : (
-              <span />
+              <span aria-hidden="true" />
             )}
-            {date && (
+            {date ? (
               <span className="font-mono text-[10px] tracking-[0.14em] text-[#8c8267] uppercase">
                 {date}
               </span>
+            ) : (
+              <span aria-hidden="true" />
             )}
           </CardItem>
 
           {/* Image — highest translateZ so it pops out most */}
-          <CardItem translateZ={200} className="w-full">
+          <CardItem translateZ={100} className="w-full shrink-0">
             <div className="relative w-full h-64 rounded-xl overflow-hidden bg-[#26241e] group-hover/card:shadow-xl">
               {card.coverImageUrl ? (
                 <Image
@@ -53,38 +55,34 @@ function PropertyCard({ card }: { card: PropertyWithImages }) {
           </CardItem>
 
           {/* Location */}
-          <CardItem translateZ={50} className="w-full mt-4">
-            <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8c8267] flex items-center gap-1.5">
+          <CardItem translateZ={30} className="w-full mt-4 shrink-0">
+            <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#8c8267] flex items-center gap-1.5 line-clamp-1">
               <MapPin className="h-3 w-3 shrink-0" strokeWidth={1.5} />
               {card.location.split("·")[0].trim()}
             </p>
           </CardItem>
 
           {/* Title */}
-          <CardItem translateZ={60} className="w-full mt-2">
-            <h3 className="font-serif font-normal text-[22px] leading-[1.1] tracking-[-0.01em] text-paper">
+          <CardItem translateZ={36} className="w-full mt-2 shrink-0">
+            <h3 className="font-serif font-normal text-[22px] leading-[1.1] tracking-[-0.01em] text-paper line-clamp-2 min-h-[calc(2*1.1*22px)]">
               {card.title}
             </h3>
           </CardItem>
 
-          {/* Description */}
-          {card.description && (
-            <CardItem translateZ={40} className="w-full mt-2">
-              <p className="text-[13px] leading-[1.6] text-[#bdb6a2] line-clamp-2">
-                {card.description}
-              </p>
-            </CardItem>
-          )}
+          {/* Description — reserved height keeps cards aligned */}
+          <CardItem translateZ={24} className="w-full mt-2 flex-1">
+            <p className="text-[13px] leading-[1.6] text-[#bdb6a2] line-clamp-2 min-h-[calc(2*1.6*13px)]">
+              {card.description ?? "\u00A0"}
+            </p>
+          </CardItem>
 
-          {/* Units stat */}
-          {card.units && (
-            <CardItem translateZ={20} className="w-full mt-4 pt-3 border-t border-[#2b2823]">
-              <span className="block font-mono text-[9px] tracking-[0.14em] uppercase text-[#8c8267] mb-0.5">
-                Units
-              </span>
-              <span className="font-serif text-[18px] text-paper">{card.units}</span>
-            </CardItem>
-          )}
+          {/* Units stat — pinned to bottom */}
+          <CardItem translateZ={12} className="w-full mt-4 pt-3 border-t border-[#2b2823] shrink-0 min-h-[52px]">
+            <span className="block font-mono text-[9px] tracking-[0.14em] uppercase text-[#8c8267] mb-0.5">
+              Units
+            </span>
+            <span className="font-serif text-[18px] text-paper">{card.units ?? "—"}</span>
+          </CardItem>
 
         </CardBody>
       </CardContainer>
@@ -117,7 +115,7 @@ export default function RecentlyAcquired({ cards }: { cards: PropertyWithImages[
 
       <AnimateIn stagger>
         <div className="mx-auto w-full max-w-[calc(100vw-48px)] px-8 sm:px-8">
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 items-start">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 items-stretch">
             {cards.map((card) => (
               <PropertyCard key={card.id} card={card} />
             ))}

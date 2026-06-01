@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 import AnimateIn from "@/components/AnimateIn";
 import { CanvasText } from "@/components/ui/canvas-text";
-import { DraggableCardBody, DraggableCardContainer } from "@/components/ui/draggable-card";
 
 function smoothScroll(id: string) {
   return (e: React.MouseEvent) => {
@@ -136,48 +135,10 @@ export default function Hero() {
         {/* Content overlay */}
         <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-9 text-[#f1ede0] z-[4]">
           <div />
-          <p className="font-serif text-[28px] leading-[1.15] tracking-[-0.01em] text-[#f1ede0] max-w-[42ch] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
+          <p className="font-serif text-[65px] leading-[1.15] tracking-[-0.01em] text-[#f1ede0] max-w-[42ch] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
             Twenty-nine years of <em className="italic text-gold-warm">compounding patiently</em> across the UK&apos;s built environment.
           </p>
         </div>
-
-        {/* Featured acquisition card */}
-        <DraggableCardContainer
-          className="absolute bottom-8 right-[48px] max-sm:right-6 z-[5] w-[min(340px,40%)]"
-          aria-label="Featured acquisition"
-        >
-          <DraggableCardBody className="w-full min-h-0 rounded-none bg-paper border border-rule shadow-[0_24px_64px_-12px_rgba(23,22,18,0.4)] p-0">
-            <div className="relative overflow-hidden bg-bg-2" style={{ aspectRatio: "16/9" }}>
-              <Image
-                src="https://res.cloudinary.com/dmns9ystn/image/upload/v1753954163/11_qsbhoy.jpg"
-                alt="Newlands Croft — Bromley"
-                fill
-                className="object-cover saturate-90 contrast-[1.02]"
-                sizes="380px"
-              />
-            </div>
-            <div className="p-[22px_24px]">
-              <div className="flex justify-between mb-3">
-                <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-accent">◆ Featured · Q2 2026</span>
-                <span className="font-mono text-[11px] tracking-[0.14em] uppercase text-muted">Acq. #072</span>
-              </div>
-              <h3 className="font-serif font-normal text-[26px] leading-[1.05] tracking-[-0.01em] m-0 mb-2">
-                Newlands Croft, <em className="italic text-accent">Bromley</em>
-              </h3>
-              <p className="text-[13px] text-ink-2 mb-4 leading-[1.55]">
-                Originally built in the 1940s as 16 flats, redeveloped into 12 spacious flats on Lennard Road, SE20. Managed in-house by our team.
-              </p>
-              <div className="grid grid-cols-3 gap-4 border-t border-rule pt-4">
-                {[{ l: "Units", v: "12" }, { l: "Yield", v: "6.9%" }, { l: "Hold", v: "9y+" }].map(({ l, v }) => (
-                  <div key={l}>
-                    <span className="block font-mono text-[10px] tracking-[0.14em] uppercase text-muted mb-1">{l}</span>
-                    <b className="font-serif font-normal text-[22px] tracking-[-0.01em] block leading-[1.1]">{v}</b>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </DraggableCardBody>
-        </DraggableCardContainer>
       </div>
     </section>
   );

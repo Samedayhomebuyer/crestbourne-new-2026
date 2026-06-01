@@ -8,7 +8,7 @@ import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
 import AnimateIn from "@/components/AnimateIn";
 import type { PropertyWithImages } from "@/lib/data/properties";
-import { CATEGORY_LABELS, type PropertyCategory } from "@/lib/db/schema";
+import { CATEGORY_LABELS, PROPERTY_CATEGORIES, type PropertyCategory } from "@/lib/db/schema";
 
 type FilterKey = "all" | PropertyCategory;
 
@@ -31,10 +31,10 @@ export default function Portfolio({
     ? initialProperties
     : initialProperties.filter((p) => p.category === active);
 
-  const filters = (["all", ...Object.keys(filterCounts).filter((k) => k !== "all")] as FilterKey[]).map((key) => ({
+  const filters = (["all", ...PROPERTY_CATEGORIES] as FilterKey[]).map((key) => ({
     key,
-    label: FILTER_LABELS[key] ?? key,
-    count: key === "all" ? filterCounts.all : filterCounts[key] ?? 0,
+    label: FILTER_LABELS[key],
+    count: key === "all" ? (filterCounts.all ?? initialProperties.length) : (filterCounts[key] ?? 0),
   }));
 
   return (
@@ -55,7 +55,10 @@ export default function Portfolio({
             Each asset is hand-picked, hands-on managed, and held for the long term.
           </AnimateIn>
         </div>
+      </div>
 
+      {/* Wider than .wrap so 4 cols match the old 3-col card width (~392px) */}
+      <div className="mx-auto w-full max-w-[min(1736px,calc(100vw-48px))] px-6 sm:px-12">
         {/* Filter chips */}
         <div className="flex gap-[10px] flex-wrap mb-8">
           {filters.map((f) => (
@@ -75,7 +78,7 @@ export default function Portfolio({
         </div>
 
         {/* Portfolio grid */}
-        <AnimateIn stagger className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <AnimateIn stagger className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           {visible.map((p) => (
               <Link
                 key={p.id}
@@ -95,7 +98,7 @@ export default function Portfolio({
                         alt={p.coverImageAlt ?? p.title}
                         fill
                         className="object-cover [filter:saturate(0.9)_contrast(1.02)]"
-                        sizes="(max-width:640px) 100vw, (max-width:1080px) 50vw, 33vw"
+                        sizes="(max-width:640px) 100vw, (max-width:1280px) 50vw, 392px"
                       />
                     )}
                     <span className={cn(

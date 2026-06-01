@@ -1,6 +1,10 @@
+"use client";
+
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 import AnimateIn from "@/components/AnimateIn";
+import ContactDrawer from "@/components/ContactDrawer";
 
 const companies = [
   "Bluesky Properties Estates Ltd",
@@ -37,6 +41,7 @@ const stats = [
 ];
 
 export default function GroupStructure() {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   return (
     <section id="group" className="py-24 bg-bg-2">
       <div className="wrap">
@@ -90,12 +95,13 @@ export default function GroupStructure() {
             <p className="text-[16px] text-ink-2 leading-[1.7] mb-7 max-w-[52ch]">
               With 39 specialised companies across 6 key sectors, the Crestbourne Group offers unparalleled expertise and comprehensive solutions for all your property investment needs.
             </p>
-            <Button variant="ghost" asChild>
-              <a href="/contact">Get in touch <ArrowIcon /></a>
+            <Button variant="ghost" onClick={() => setDrawerOpen(true)}>
+              Get in touch <ArrowIcon />
             </Button>
           </div>
         </div>
       </div>
+      <ContactDrawer open={drawerOpen} onClose={() => setDrawerOpen(false)} />
     </section>
   );
 }
