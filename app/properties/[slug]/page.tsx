@@ -2,9 +2,8 @@ import { notFound } from "next/navigation";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
 import AnimateIn from "@/components/AnimateIn";
-import { Button } from "@/components/ui/button";
-import { ArrowIcon } from "@/components/icons";
 import PropertyDetailHero from "@/components/property/PropertyDetailHero";
+import EnquireButton from "@/components/property/EnquireButton";
 import PropertyImageGallery from "@/components/property/PropertyImageGallery";
 import RelatedProperties from "@/components/property/RelatedProperties";
 import PropertySubscribeCta from "@/components/property/PropertySubscribeCta";
@@ -92,16 +91,7 @@ export default async function PropertyDetailPage({ params }: { params: { slug: s
                   </dl>
 
                   <div className="mt-[26px] flex flex-col gap-3 border-t border-rule pt-6">
-                    <Button variant="default" className="w-full justify-between" asChild>
-                      <a href="#register">
-                        Enquire about this deal <ArrowIcon className="w-[14px] h-[14px]" />
-                      </a>
-                    </Button>
-                    <Button variant="ghost" className="w-full justify-between" asChild>
-                      <a href="/#contact">
-                        Submit a property <ArrowIcon className="w-[14px] h-[14px]" />
-                      </a>
-                    </Button>
+                    <EnquireButton />
                   </div>
 
                   <ul className="list-none m-0 p-0 mt-[18px] flex flex-col gap-[10px]">
@@ -128,7 +118,7 @@ export default async function PropertyDetailPage({ params }: { params: { slug: s
       <RelatedProperties properties={related} />
 
       {/* Investor register */}
-      <PropertySubscribeCta />
+      {/* <PropertySubscribeCta /> */}
 
       <Footer />
 
