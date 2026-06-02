@@ -11,9 +11,6 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-
   const { name, email } = await req.json();
   if (!name || !email) {
     return NextResponse.json({ error: "Name and email are required" }, { status: 400 });
