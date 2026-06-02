@@ -7,6 +7,7 @@ import Portfolio from "@/components/Portfolio";
 import TrackRecord from "@/components/TrackRecord";
 import Approach from "@/components/Approach";
 import GroupStructure from "@/components/GroupStructure";
+import PropertySubscribeCta from "@/components/property/PropertySubscribeCta";
 import Contact from "@/components/Contact";
 import Footer from "@/components/Footer";
 import { getRecentlyAcquired, getPortfolioProperties, pickRandom } from "@/lib/data/properties";
@@ -37,6 +38,7 @@ export default async function Home() {
       <TrackRecord />
       <Approach />
       <GroupStructure />
+      {/* <PropertySubscribeCta /> */}
       <Contact />
       <Footer />
     </>

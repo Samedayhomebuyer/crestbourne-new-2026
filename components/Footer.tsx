@@ -1,3 +1,8 @@
+"use client";
+
+import { useState } from "react";
+import { ArrowIcon } from "@/components/icons";
+
 const links = {
   Portfolio: [
     { label: "Recently Acquired", href: "#acquired" },
@@ -8,6 +13,61 @@ const links = {
     { label: "Group Companies", href: "#group" },
   ],
 };
+
+function FooterSubscribe() {
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    const res = await fetch("/api/subscribers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name: email.split("@")[0], email }),
+    });
+    setStatus(res.ok ? "done" : "error");
+  }
+
+  if (status === "done") {
+    return (
+      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-[#9d957f] mt-4">
+        You&apos;re registered. We&apos;ll be in touch.
+      </p>
+    );
+  }
+
+  return (
+    <form onSubmit={handleSubmit} className="mt-4">
+      <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-[#857c63] mb-2">
+        Investor updates
+      </p>
+      <div className="flex gap-0">
+        <input
+          type="email"
+          required
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="your@email.com"
+          className="flex-1 min-w-0 px-3 py-2 bg-[#1f1d18] border border-[#3a3528] text-[#f1ede0] placeholder:text-[#6e6753] text-[13px] focus:outline-none focus:border-[#857c63] transition-colors font-[inherit]"
+        />
+        <button
+          type="submit"
+          disabled={status === "loading"}
+          className="px-3 py-2 bg-gold-warm text-[#1c1a15] border-0 cursor-pointer hover:bg-[#e8d9a8] transition-colors flex-shrink-0 disabled:opacity-50"
+          aria-label="Subscribe"
+        >
+          <ArrowIcon className="w-[13px] h-[13px]" />
+        </button>
+      </div>
+      {status === "error" && (
+        <p className="font-mono text-[9px] tracking-[0.1em] uppercase text-red-400 mt-1">
+          Something went wrong. Try again.
+        </p>
+      )}
+    </form>
+  );
+}
 
 export default function Footer() {
   return (
@@ -28,6 +88,7 @@ export default function Footer() {
             <p className="text-[14px] leading-[1.6] max-w-[38ch] text-[#9d957f] mt-[14px]">
               Property investment and asset management for the long horizon. Family-led, principal-aligned, privately held since 1997.
             </p>
+            <FooterSubscribe />
           </div>
 
           {/* Link columns */}
@@ -53,7 +114,6 @@ export default function Footer() {
           <span>
             © 2026 <a href="https://www.breezeflowai.com" target="_blank" rel="noopener noreferrer" className="hover:underline">Breezeflowai</a>
           </span>
-     
         </div>
       </div>
     </footer>

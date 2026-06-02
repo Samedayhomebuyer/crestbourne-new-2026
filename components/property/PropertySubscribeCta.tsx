@@ -5,7 +5,28 @@ import AnimateIn from "@/components/AnimateIn";
 import { ArrowIcon } from "@/components/icons";
 
 export default function PropertySubscribeCta() {
-  const [submitted, setSubmitted] = useState(false);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [status, setStatus] = useState<"idle" | "loading" | "done" | "error">("idle");
+  const [errorMsg, setErrorMsg] = useState("");
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setStatus("loading");
+    setErrorMsg("");
+    const res = await fetch("/api/subscribers", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email }),
+    });
+    if (res.ok) {
+      setStatus("done");
+    } else {
+      const data = await res.json().catch(() => ({}));
+      setErrorMsg(data.error ?? "Something went wrong. Please try again.");
+      setStatus("error");
+    }
+  }
 
   return (
     <section id="register" className="relative py-24 bg-accent overflow-hidden">
@@ -36,7 +57,7 @@ export default function PropertySubscribeCta() {
           {/* Right: form card */}
           <AnimateIn delay={120}>
             <aside className="bg-[rgba(255,255,255,0.06)] border border-[rgba(255,255,255,0.18)] p-[32px_32px_30px] backdrop-blur-sm">
-              {submitted ? (
+              {status === "done" ? (
                 <div className="text-center py-[18px]">
                   <span className="font-serif italic text-[32px] text-gold-warm block mb-2">Thank you.</span>
                   <p className="text-[#d3dccb] text-[14px] m-0">
@@ -44,27 +65,32 @@ export default function PropertySubscribeCta() {
                   </p>
                 </div>
               ) : (
-                <form
-                  className="flex flex-col gap-3"
-                  onSubmit={(e) => { e.preventDefault(); setSubmitted(true); }}
-                >
+                <form className="flex flex-col gap-3" onSubmit={handleSubmit}>
                   <input
                     type="text"
                     placeholder="Your name"
                     required
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="w-full px-4 py-[13px] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.2)] text-[#f1ede0] placeholder:text-[rgba(255,255,255,0.45)] font-[inherit] text-[15px] focus:outline-none focus:border-gold-warm transition-colors rounded-[2px]"
                   />
                   <input
                     type="email"
                     placeholder="Email address"
                     required
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="w-full px-4 py-[13px] bg-[rgba(255,255,255,0.08)] border border-[rgba(255,255,255,0.2)] text-[#f1ede0] placeholder:text-[rgba(255,255,255,0.45)] font-[inherit] text-[15px] focus:outline-none focus:border-gold-warm transition-colors rounded-[2px]"
                   />
+                  {status === "error" && (
+                    <p className="font-mono text-[10px] tracking-[0.1em] uppercase text-red-300 m-0">{errorMsg}</p>
+                  )}
                   <button
                     type="submit"
-                    className="w-full px-[22px] py-[13px] bg-gold-warm text-[#1c1a15] border-0 cursor-pointer font-mono text-[11px] tracking-[0.14em] uppercase font-medium inline-flex items-center justify-between hover:bg-[#e8d9a8] transition-colors rounded-[2px]"
+                    disabled={status === "loading"}
+                    className="w-full px-[22px] py-[13px] bg-gold-warm text-[#1c1a15] border-0 cursor-pointer font-mono text-[11px] tracking-[0.14em] uppercase font-medium inline-flex items-center justify-between hover:bg-[#e8d9a8] transition-colors rounded-[2px] disabled:opacity-60"
                   >
-                    Register as investor <ArrowIcon className="w-[14px] h-[14px]" />
+                    {status === "loading" ? "Registering…" : <>Register as investor <ArrowIcon className="w-[14px] h-[14px]" /></>}
                   </button>
                   <p className="font-mono text-[9.5px] tracking-[0.1em] uppercase text-[rgba(255,255,255,0.45)] text-center m-0">
                     Unsubscribe at any time · No third parties
