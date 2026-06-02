@@ -19,7 +19,7 @@ export default function RelatedProperties({ properties }: { properties: Property
               More from the book
             </div>
             <h2 className="font-serif font-normal text-[clamp(34px,4.4vw,60px)] leading-none tracking-[-0.02em] mt-4 mb-0 text-ink">
-              Comparable <em className="italic text-accent">holdings.</em>
+              Other <em className="italic text-accent">holdings.</em>
             </h2>
           </AnimateIn>
           <AnimateIn delay={100}>
