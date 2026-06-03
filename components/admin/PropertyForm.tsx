@@ -133,10 +133,13 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
     }));
   }
 
-  async function handleBulkUpload(files: FileList) {
+  async function handleBulkUpload(files: File[]) {
     setBulkUploading(true);
     setBulkProgress(`0 / ${files.length}`);
+    setError("");
     const uploaded: string[] = [];
+    const errors: string[] = [];
+
     for (let i = 0; i < files.length; i++) {
       try {
         const signRes = await fetch("/api/cloudinary/sign", {
@@ -161,18 +164,24 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
         const data = await uploadRes.json();
         if (!uploadRes.ok) throw new Error(data?.error?.message ?? "Upload failed");
         uploaded.push(data.secure_url);
-      } catch {
-        // skip failed files silently, count what succeeded
+      } catch (err) {
+        errors.push(`${files[i].name}: ${String(err)}`);
       }
       setBulkProgress(`${i + 1} / ${files.length}`);
     }
-    setForm((prev) => ({
-      ...prev,
-      images: [
-        ...prev.images,
-        ...uploaded.map((url) => ({ url, altText: "", caption: "" })),
-      ],
-    }));
+
+    if (uploaded.length > 0) {
+      setForm((prev) => ({
+        ...prev,
+        images: [
+          ...prev.images,
+          ...uploaded.map((url) => ({ url, altText: "", caption: "" })),
+        ],
+      }));
+    }
+    if (errors.length > 0) {
+      setError(`${errors.length} file(s) failed:\n${errors.join("\n")}`);
+    }
     setBulkUploading(false);
     setBulkProgress("");
   }
@@ -340,8 +349,9 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
           multiple
           className="hidden"
           onChange={(e) => {
-            if (e.target.files?.length) handleBulkUpload(e.target.files);
+            const files = e.target.files ? Array.from(e.target.files) : [];
             e.target.value = "";
+            if (files.length) handleBulkUpload(files);
           }}
         />
         {form.images.length === 0 && (
