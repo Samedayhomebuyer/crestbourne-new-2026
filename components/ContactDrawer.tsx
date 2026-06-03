@@ -39,9 +39,17 @@ export default function ContactDrawer({ open, onClose }: ContactDrawerProps) {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setStatus("loading");
-    // Submission wired up in step 2
-    await new Promise((r) => setTimeout(r, 800));
-    setStatus("success");
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(fields),
+      });
+      if (!res.ok) throw new Error();
+      setStatus("success");
+    } catch {
+      setStatus("error");
+    }
   }
 
   function handleClose() {

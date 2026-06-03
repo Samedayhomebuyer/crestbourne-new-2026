@@ -1,7 +1,10 @@
 "use client";
 
 import { useState } from "react";
+import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
+
+const SAME_DAY_HOME_BUYER_URL = "https://www.samedayhomebuyer.co.uk/";
 
 const links = {
   Portfolio: [
@@ -108,6 +111,29 @@ export default function Footer() {
               </ul>
             </div>
           ))}
+        </div>
+
+        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 p-6 lg:p-8 mb-12 border border-[#3a3528] bg-[#1f1d18]">
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.14em] uppercase text-gold-warm m-0 mb-2">
+              Group company
+            </p>
+            <h3 className="font-serif font-normal text-[clamp(22px,3vw,28px)] tracking-[-0.01em] text-[#f1ede0] m-0 mb-2">
+              Sell your house fast for cash
+            </h3>
+            <p className="text-[14px] leading-[1.6] text-[#9d957f] max-w-[52ch] m-0">
+              <span className="text-[#d8d2bf]">Same Day Home Buyer</span> is part of the Crestbourne
+              Group. Get a no-obligation cash offer in 2 hours and complete in as little as 7 days.
+            </p>
+          </div>
+          <Button
+            asChild
+            className="w-full sm:w-auto flex-shrink-0 bg-gold-warm text-[#1c1a15] border-gold-warm hover:bg-[#e8d9a8] hover:text-[#1c1a15] hover:border-[#e8d9a8]"
+          >
+            <a href={SAME_DAY_HOME_BUYER_URL} target="_blank" rel="noopener noreferrer">
+              Visit Same Day Home Buyer <ArrowIcon />
+            </a>
+          </Button>
         </div>
 
         <div className="flex flex-col sm:flex-row justify-between items-center gap-3 pt-6 font-mono text-[10px] tracking-[0.14em] uppercase text-[#6e6753]">

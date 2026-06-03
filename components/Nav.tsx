@@ -1,6 +1,8 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 import { cn } from "@/lib/utils";
@@ -25,8 +27,28 @@ function smoothScroll(id: string) {
 }
 
 export default function Nav() {
+  const pathname = usePathname();
   const [active, setActive] = useState("#portfolio");
   const [menuOpen, setMenuOpen] = useState(false);
+
+  const goHome = (e: React.MouseEvent) => {
+    setMenuOpen(false);
+    if (pathname === "/") {
+      e.preventDefault();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+  };
+
+  const goToHash = (hash: string) => (e: React.MouseEvent) => {
+    setMenuOpen(false);
+    if (pathname === "/") {
+      e.preventDefault();
+      const el = document.querySelector(hash);
+      if (el) {
+        window.scrollTo({ top: (el as HTMLElement).offsetTop - 72, behavior: "smooth" });
+      }
+    }
+  };
 
   useEffect(() => {
     if (menuOpen) document.body.style.overflow = "hidden";
@@ -55,7 +77,7 @@ export default function Nav() {
     <header className="border-b border-rule bg-bg sticky top-0 z-50 backdrop-saturate-[120%]">
       <div className="wrap flex items-center justify-between h-[72px]">
         {/* Brand */}
-        <a className="flex items-center gap-[14px]" href="#" onClick={smoothScroll("#")}>
+        <Link href="/" className="flex items-center gap-[14px]" onClick={goHome}>
           <div className="relative w-9 h-9 rounded-full border border-ink bg-paper grid place-items-center flex-shrink-0 before:content-[''] before:absolute before:inset-1 before:rounded-full before:border before:border-ink before:opacity-25">
             <span className="font-serif italic text-[20px] leading-none text-ink translate-y-[-1px]">C</span>
           </div>
@@ -63,7 +85,7 @@ export default function Nav() {
             <div className="font-serif text-[24px] tracking-[-0.01em]">Crestbourne</div>
             <span className="block font-mono text-[9px] tracking-widest3 text-muted uppercase mt-[-2px]">Est. 1997 · London</span>
           </div>
-        </a>
+        </Link>
 
         {/* Primary nav */}
         <nav className="hidden lg:block">
@@ -89,9 +111,9 @@ export default function Nav() {
         {/* CTA + hamburger */}
         <div className="flex items-center gap-[18px]">
           <Button asChild className="hidden sm:inline-flex">
-            <a href="#contact" onClick={smoothScroll("#contact")}>
+            <Link href="/#contact" onClick={goToHash("#contact")}>
               Speak with us <ArrowIcon />
-            </a>
+            </Link>
           </Button>
           <button
             className="lg:hidden p-2 -mr-2 text-ink"
@@ -124,9 +146,9 @@ export default function Nav() {
             ))}
             <li className="p-4">
               <Button asChild className="w-full">
-                <a href="#contact" onClick={(e) => { smoothScroll("#contact")(e); setMenuOpen(false); }}>
+                <Link href="/#contact" onClick={goToHash("#contact")}>
                   Speak with us <ArrowIcon />
-                </a>
+                </Link>
               </Button>
             </li>
           </ul>

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
+import WhatsAppWidget from "@/components/WhatsAppWidget";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -51,6 +52,7 @@ export default function RootLayout({
         style={{ fontFamily: "var(--font-sans), -apple-system, system-ui, sans-serif" }}
       >
         {children}
+        <WhatsAppWidget />
       </body>
     </html>
   );

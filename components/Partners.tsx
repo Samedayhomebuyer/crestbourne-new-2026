@@ -14,7 +14,7 @@ export default function Partners() {
     <AnimateIn className="border-t border-b border-rule py-[22px] bg-bg-2">
       <div className="wrap flex items-center gap-11 flex-wrap justify-between">
         <span className="font-mono text-[10px] tracking-[0.14em] uppercase text-muted whitespace-nowrap">
-          Working alongside
+        Transacting with
         </span>
         <div className="flex gap-11 items-center flex-wrap">
           {partners.map((p) => (
