@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import type { PropertyWithImages } from "@/lib/data/properties";
 import { PROPERTY_CATEGORIES, CATEGORY_LABELS, type PropertyCategory } from "@/lib/db/schema";
+import ImageUploader from "@/components/admin/ImageUploader";
 
 type ImageRow = { url: string; altText: string; caption: string };
 
@@ -69,6 +70,9 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
   const [loading, setLoading] = useState(isEdit);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+  const [bulkUploading, setBulkUploading] = useState(false);
+  const [bulkProgress, setBulkProgress] = useState("");
+  const bulkInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!propertyId) return;
@@ -127,6 +131,50 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
       ...prev,
       images: prev.images.filter((_, idx) => idx !== i),
     }));
+  }
+
+  async function handleBulkUpload(files: FileList) {
+    setBulkUploading(true);
+    setBulkProgress(`0 / ${files.length}`);
+    const uploaded: string[] = [];
+    for (let i = 0; i < files.length; i++) {
+      try {
+        const signRes = await fetch("/api/cloudinary/sign", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ folder: "crestbourne/properties" }),
+        });
+        if (!signRes.ok) throw new Error(await signRes.text());
+        const { signature, timestamp, folder, cloudName, apiKey } = await signRes.json();
+
+        const fd = new FormData();
+        fd.append("file", files[i]);
+        fd.append("api_key", apiKey);
+        fd.append("timestamp", String(timestamp));
+        fd.append("signature", signature);
+        fd.append("folder", folder);
+
+        const uploadRes = await fetch(
+          `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+          { method: "POST", body: fd }
+        );
+        const data = await uploadRes.json();
+        if (!uploadRes.ok) throw new Error(data?.error?.message ?? "Upload failed");
+        uploaded.push(data.secure_url);
+      } catch {
+        // skip failed files silently, count what succeeded
+      }
+      setBulkProgress(`${i + 1} / ${files.length}`);
+    }
+    setForm((prev) => ({
+      ...prev,
+      images: [
+        ...prev.images,
+        ...uploaded.map((url) => ({ url, altText: "", caption: "" })),
+      ],
+    }));
+    setBulkUploading(false);
+    setBulkProgress("");
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -250,38 +298,62 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
       <div className="bg-paper border border-rule p-6 space-y-4">
         <h2 className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted">Cover image</h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className={field}>Cover image URL</label>
-            <input value={form.coverImageUrl} onChange={(e) => updateField("coverImageUrl", e.target.value)} className={input} placeholder="https://..." />
-          </div>
+          <ImageUploader
+            value={form.coverImageUrl}
+            onUpload={(url) => updateField("coverImageUrl", url)}
+            label="Cover image"
+          />
           <div>
             <label className={field}>Cover image alt text</label>
             <input value={form.coverImageAlt} onChange={(e) => updateField("coverImageAlt", e.target.value)} className={input} />
           </div>
         </div>
-        {form.coverImageUrl && (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={form.coverImageUrl} alt={form.coverImageAlt} className="h-40 w-full object-cover border border-rule" />
-        )}
       </div>
 
       {/* Additional images */}
       <div className="bg-paper border border-rule p-6 space-y-4">
         <div className="flex items-center justify-between">
           <h2 className="font-mono text-[10.5px] tracking-[0.14em] uppercase text-muted">Gallery images</h2>
-          <button type="button" onClick={addImage} className="font-mono text-[10px] tracking-[0.12em] uppercase text-accent hover:underline">
-            + Add image
-          </button>
+          <div className="flex items-center gap-4">
+            {bulkUploading && (
+              <span className="font-mono text-[10px] tracking-[0.1em] uppercase text-muted">
+                Uploading {bulkProgress}…
+              </span>
+            )}
+            <button
+              type="button"
+              disabled={bulkUploading}
+              onClick={() => bulkInputRef.current?.click()}
+              className="font-mono text-[10px] tracking-[0.12em] uppercase text-accent hover:underline disabled:opacity-50"
+            >
+              + Upload images
+            </button>
+            <button type="button" onClick={addImage} className="font-mono text-[10px] tracking-[0.12em] uppercase text-muted hover:underline">
+              + Add blank row
+            </button>
+          </div>
         </div>
+        <input
+          ref={bulkInputRef}
+          type="file"
+          accept="image/*"
+          multiple
+          className="hidden"
+          onChange={(e) => {
+            if (e.target.files?.length) handleBulkUpload(e.target.files);
+            e.target.value = "";
+          }}
+        />
         {form.images.length === 0 && (
           <p className="font-mono text-[10px] tracking-[0.1em] uppercase text-muted/60">No gallery images yet.</p>
         )}
         {form.images.map((img, i) => (
           <div key={i} className="grid grid-cols-1 sm:grid-cols-[1fr_1fr_auto] gap-3 items-end border-t border-rule-soft pt-4">
-            <div>
-              <label className={field}>Image URL</label>
-              <input value={img.url} onChange={(e) => updateImage(i, "url", e.target.value)} className={input} placeholder="https://..." />
-            </div>
+            <ImageUploader
+              value={img.url}
+              onUpload={(url) => updateImage(i, "url", url)}
+              label={`Gallery image ${i + 1}`}
+            />
             <div>
               <label className={field}>Alt text</label>
               <input value={img.altText} onChange={(e) => updateImage(i, "altText", e.target.value)} className={input} />
