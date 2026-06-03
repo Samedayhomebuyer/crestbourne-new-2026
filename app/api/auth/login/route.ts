@@ -5,7 +5,7 @@ import { createSession } from "@/lib/auth/server";
 export async function POST(req: NextRequest) {
   const { email, password } = await req.json();
 
-  const hash = process.env.ADMIN_PASSWORD_HASH ?? "";
+  const hash = Buffer.from(process.env.ADMIN_PASSWORD_HASH ?? "", "base64").toString();
   const emailMatch = email === process.env.ADMIN_EMAIL;
   const passwordMatch = hash.length > 0 && await compare(password ?? "", hash);
 
