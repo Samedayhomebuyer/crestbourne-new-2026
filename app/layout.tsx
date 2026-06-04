@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Instrument_Serif, Inter_Tight, JetBrains_Mono } from "next/font/google";
 import WhatsAppWidget from "@/components/WhatsAppWidget";
+import { getSiteUrl } from "@/lib/site-url";
 import "./globals.css";
 
 const instrumentSerif = Instrument_Serif({
@@ -26,6 +27,7 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(getSiteUrl()),
   title: "Crestbourne — Property Investment & Asset Management",
   description:
     "A privately-held London investor in UK property since 1997. We acquire below replacement cost, manage every asset in-house, and hold for the long horizon.",
