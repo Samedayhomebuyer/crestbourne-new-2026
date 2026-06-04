@@ -41,16 +41,16 @@ export default function Hero() {
   }, []);
 
   return (
-    <section className="pt-16 pb-0 relative">
+    <section className="pt-10 sm:pt-16 pb-0 relative">
       {/* Headline + meta row */}
       <div className="wrap">
-        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-20 items-end mb-12">
+        <div className="grid grid-cols-1 lg:grid-cols-[1.3fr_0.7fr] gap-10 lg:gap-20 items-end mb-8 sm:mb-12">
           <AnimateIn>
             <div className="font-mono text-[11px] tracking-widest2 uppercase text-muted flex items-center">
               <span className="inline-block w-[6px] h-[6px] rounded-full bg-accent mr-[10px] translate-y-[1px]" />
               Property Investment &amp; Asset Management
             </div>
-            <h1 className="font-serif font-normal text-[clamp(56px,8vw,124px)] leading-[0.95] tracking-[-0.02em] mt-6 text-ink">
+            <h1 className="font-serif font-normal text-[clamp(40px,11vw,124px)] leading-[0.95] tracking-[-0.02em] mt-4 sm:mt-6 text-ink">
               Quiet capital,<br />built for the<br />
               <em className="italic">
                 <CanvasText
@@ -75,29 +75,33 @@ export default function Hero() {
             </h1>
           </AnimateIn>
           <AnimateIn delay={150}>
-            <p className="text-[18px] leading-[1.55] text-ink-2 max-w-[46ch] mb-0">
+            <p className="text-[16px] sm:text-[18px] leading-[1.55] text-ink-2 max-w-[46ch] mb-0 mt-6 lg:mt-0">
               A privately-held London investor in UK property since 1997. We acquire below
               replacement cost, manage every asset in-house, and hold for the long horizon.
             </p>
-            <div className="flex gap-12 mt-8 pt-7 border-t border-rule">
+            <div className="grid grid-cols-3 gap-x-3 gap-y-4 sm:flex sm:gap-8 lg:gap-12 mt-6 sm:mt-8 pt-6 sm:pt-7 border-t border-rule">
               {[
                 { label: "Since", value: "1997" },
                 { label: "Portfolio GDV", value: "£420m" },
                 { label: "Units", value: "1,240" },
               ].map(({ label, value }) => (
-                <div key={label}>
-                  <span className="block font-mono text-[11px] tracking-[0.14em] uppercase text-muted mb-2">{label}</span>
-                  <strong className="font-serif font-normal text-[38px] tracking-[-0.02em] block leading-none">{value}</strong>
+                <div key={label} className="min-w-0">
+                  <span className="block font-mono text-[9px] sm:text-[11px] tracking-[0.12em] sm:tracking-[0.14em] uppercase text-muted mb-1.5 sm:mb-2 leading-tight">
+                    {label}
+                  </span>
+                  <strong className="font-serif font-normal text-[clamp(22px,6.5vw,38px)] tracking-[-0.02em] block leading-none">
+                    {value}
+                  </strong>
                 </div>
               ))}
             </div>
-            <div className="flex gap-[14px] mt-9 items-center">
-              <Button asChild>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-[14px] mt-7 sm:mt-9 sm:items-center">
+              <Button asChild className="w-full sm:w-auto justify-center">
                 <a href="#acquired" onClick={smoothScroll("#acquired")}>
                   View latest acquisitions <ArrowIcon />
                 </a>
               </Button>
-              <Button variant="ghost" asChild>
+              <Button variant="ghost" asChild className="w-full sm:w-auto justify-center">
                 <a href="#approach" onClick={smoothScroll("#approach")}>Our approach</a>
               </Button>
             </div>
@@ -105,10 +109,9 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* Image stage */}
+      {/* Image stage — taller aspect on mobile so overlay copy fits inside the frame */}
       <div
-        className="relative bg-[#0e0d0a] border border-rule z-[2]"
-        style={{ aspectRatio: "21/9" }}
+        className="relative bg-[#0e0d0a] border border-rule z-[2] overflow-hidden aspect-[4/5] sm:aspect-[3/2] md:aspect-[16/9] lg:aspect-[21/9]"
         role="img"
         aria-label="Crestbourne showreel — UK property portfolio"
       >
@@ -133,9 +136,8 @@ export default function Hero() {
         </div>
 
         {/* Content overlay */}
-        <div className="absolute inset-0 flex flex-col justify-between p-8 md:p-9 text-[#f1ede0] z-[4]">
-          <div />
-          <p className="font-serif text-[65px] leading-[1.15] tracking-[-0.01em] text-[#f1ede0] max-w-[42ch] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)]">
+        <div className="absolute inset-0 flex flex-col justify-end p-5 sm:p-8 md:p-9 text-[#f1ede0] z-[4]">
+          <p className="font-serif text-[clamp(1.375rem,5.2vw,4.0625rem)] leading-[1.12] sm:leading-[1.15] tracking-[-0.01em] text-[#f1ede0] max-w-[42ch] [text-shadow:0_2px_24px_rgba(0,0,0,0.35)] m-0">
             Twenty-nine years of <em className="italic text-gold-warm">compounding patiently</em> across the UK&apos;s built environment.
           </p>
         </div>

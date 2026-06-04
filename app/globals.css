@@ -71,6 +71,14 @@
       linear-gradient(90deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0) 35%);
   }
 
+  @media (max-width: 639px) {
+    .hero-stage-overlay {
+      background:
+        linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.55) 55%, rgba(0,0,0,0.72) 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.2) 0%, rgba(0,0,0,0) 50%);
+    }
+  }
+
   .hero-image-motion {
     animation: hero-image-motion 14s ease-in-out infinite alternate;
     transform-origin: center;
