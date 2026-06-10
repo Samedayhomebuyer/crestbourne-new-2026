@@ -99,8 +99,8 @@ function buildEmail({
             <td style="background:#ffffff;padding:${desc ? "24px" : "32px"} 40px 36px;">
               <table cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="background:#1a1a18;border-radius:100px;padding:12px 28px;">
-                    <a href="${propertyUrl}" style="font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#f5f4f0;text-decoration:none;">
+                  <td style="border-radius:100px;background:#1a1a18;">
+                    <a href="${propertyUrl}" style="display:inline-block;padding:12px 28px;font-family:'Courier New',monospace;font-size:11px;letter-spacing:0.14em;text-transform:uppercase;color:#f5f4f0;text-decoration:none;border-radius:100px;">
                       View Property →
                     </a>
                   </td>
