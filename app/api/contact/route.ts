@@ -11,8 +11,8 @@ export async function POST(req: NextRequest) {
   }
 
   const { error } = await resend.emails.send({
-    from: "Crestbourne Website <onboarding@resend.dev>",
-    to: "info@samedayhomebuyer.co.uk",
+    from: "Crestbourne Website <info@mail.crestbourne.co.uk>",
+    to: "info@crestbourne.co.uk",
     replyTo: email,
     subject: `Crestbourne Site Enquiry- New enquiry from ${name}`,
     html: `<!DOCTYPE html>
