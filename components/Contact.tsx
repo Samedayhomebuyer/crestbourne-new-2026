@@ -8,7 +8,7 @@ import ContactDrawer from "@/components/ContactDrawer";
 
 const details = [
   { label: "Address", value: <>First Floor, <em className="italic">Winston House</em><br />349 Regents Park Rd<br />London N3 1DH</> },
-  { label: "Telephone", value: <>+44 (0)20 3371 5548</> },
+  { label: "Telephone", value: <>+44 (0)20 3371 554</> },
   { label: "Email", value: <><em className="italic">info</em>@crestbourne.co.uk</> },
 ];
 
