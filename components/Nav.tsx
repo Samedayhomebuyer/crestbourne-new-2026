@@ -85,6 +85,10 @@ export default function Nav() {
             <div className="font-serif text-[24px] tracking-[-0.01em]">Crestbourne</div>
             <span className="block font-mono text-[9px] tracking-widest3 text-muted uppercase mt-[-2px]">Est. 1997 · London</span>
           </div>
+          <span className="hidden sm:block text-rule font-mono text-[16px] select-none mx-3">|</span>
+          <div className="hidden sm:block">
+            <div className="font-serif text-[18px] tracking-[-0.01em] text-ink">Fasthomesuk</div>
+          </div>
         </Link>
 
         {/* Primary nav */}

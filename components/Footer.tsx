@@ -87,6 +87,8 @@ export default function Footer() {
                 <div className="font-serif text-[24px] tracking-[-0.01em] text-[#f1ede0]">Crestbourne</div>
                 <span className="block font-mono text-[9px] tracking-widest3 text-[#857c63] uppercase mt-[-2px]">Est. 1997 · London</span>
               </div>
+              <span className="text-[#3a3528] font-mono text-[16px] select-none mx-3">|</span>
+              <div className="font-serif text-[18px] tracking-[-0.01em] text-[#f1ede0]">Fasthomesuk</div>
             </a>
             <p className="text-[14px] leading-[1.6] max-w-[38ch] text-[#9d957f] mt-[14px]">
               Property investment and asset management for the long horizon. Family-led, principal-aligned, privately held since 1997.
