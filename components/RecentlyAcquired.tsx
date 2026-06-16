@@ -107,7 +107,7 @@ export default function RecentlyAcquired({ cards }: { cards: PropertyWithImages[
             </h2>
           </AnimateIn>
           <AnimateIn as="p" delay={150} className="text-[17px] leading-[1.6] text-[#bdb6a2] max-w-[50ch] pb-[6px]">
-            The most recent transactions completed by the Crestbourne team — each sitting within our core thesis
+            The most recent transactions completed by the Crestbourne team and FasthomesUK — each sitting within our core thesis
             of undervalued income-producing assets with a clear path to repositioning.
           </AnimateIn>
         </div>
