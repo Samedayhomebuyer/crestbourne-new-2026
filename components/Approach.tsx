@@ -11,7 +11,7 @@ const pillars = [
   {
     num: "ii.",
     title: <>Manage in-house, <em className="italic text-gold-warm">hands on.</em></>,
-    desc: "Every Crestbourne asset is operated by our own team. Leasing, maintenance, capex, compliance — no outsourcing. It's slower to scale, but it's the source of our returns.",
+    desc: "Every Crestbourne and FasthomesUK asset is operated by our own team. Leasing, maintenance, capex, compliance — no outsourcing. It's slower to scale, but it's the source of our returns.",
     tags: ["In-house", "Vertically integrated", "Operator-led"],
   },
   {

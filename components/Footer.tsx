@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { ArrowIcon } from "@/components/icons";
 
@@ -79,7 +80,8 @@ export default function Footer() {
         <div className="grid grid-cols-2 lg:grid-cols-[1.4fr_1fr_1fr_1fr] gap-12 pb-12 border-b border-[#2b2823]">
           {/* Brand */}
           <div className="col-span-2 lg:col-span-1">
-            <a className="flex items-center gap-[14px]" href="#">
+            {/* Crestbourne mark */}
+            <a className="inline-flex items-center gap-[14px]" href="#">
               <div className="relative w-9 h-9 rounded-full border border-[#3a3528] bg-[#1f1d18] grid place-items-center flex-shrink-0 before:content-[''] before:absolute before:inset-1 before:rounded-full before:border before:border-[#3a3528] before:opacity-25">
                 <span className="font-serif italic text-[20px] leading-none text-gold-warm translate-y-[-1px]">C</span>
               </div>
@@ -87,49 +89,54 @@ export default function Footer() {
                 <div className="font-serif text-[24px] tracking-[-0.01em] text-[#f1ede0]">Crestbourne</div>
                 <span className="block font-mono text-[9px] tracking-widest3 text-[#857c63] uppercase mt-[-2px]">Est. 1997 · London</span>
               </div>
-              <span className="text-[#3a3528] font-mono text-[16px] select-none mx-2 sm:mx-3">|</span>
-              <span className="flex items-center gap-[10px]">
-                <svg
-                  viewBox="0 0 40 40"
-                  className="w-9 h-9 flex-shrink-0 rounded-[11px] shadow-sm ring-1 ring-white/10"
-                >
-                  <defs>
-                    <linearGradient id="fhFoot" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                      <stop offset="0" stopColor="#f59e0b" />
-                      <stop offset="0.5" stopColor="#fb6f4d" />
-                      <stop offset="1" stopColor="#e11d6b" />
-                    </linearGradient>
-                  </defs>
-                  <rect width="40" height="40" rx="11" fill="url(#fhFoot)" />
-                  <path
-                    d="M11 19.5 L20 11.5 L29 19.5"
-                    fill="none"
-                    stroke="#fff"
-                    strokeWidth={2.2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M13.5 18.6 V29 H26.5 V18.6"
-                    fill="none"
-                    stroke="#fff"
-                    strokeWidth={2.2}
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                  />
-                  <path
-                    d="M21.4 19 L16.8 25 H19.6 L18.2 29.5 L23.4 23 H20.4 Z"
-                    fill="#fde047"
-                    stroke="#fde047"
-                    strokeWidth={0.6}
-                    strokeLinejoin="round"
-                  />
-                </svg>
-                <span className="font-serif text-[18px] sm:text-[20px] tracking-[-0.01em] text-[#f1ede0] leading-none whitespace-nowrap">
-                  Fasthomes<span className="text-[#fb6f4d]">UK</span>
-                </span>
-              </span>
             </a>
+
+            {/* Endorsed group cluster */}
+            <div className="flex items-center gap-[14px] mt-4">
+              <span className="w-px h-[38px] bg-[#3a3528] flex-shrink-0" />
+              <div className="flex flex-col gap-[5px]">
+                {/* <span className="font-mono text-[9px] tracking-widest3 text-[#857c63] uppercase">The Group</span> */}
+                <div className="flex items-center">
+                  {/* Fasthomes UK — ink house + gold bolt */}
+                  <span className="inline-flex items-center gap-[9px]">
+                    <svg viewBox="0 0 24 24" width={17} height={17} className="flex-shrink-0" style={{ color: "#d9c89b" }}>
+                      <path d="M5 11 L12 5 L19 11" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M6.6 10 V19 H17.4 V10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                      <path d="M13.1 10.7 L9.6 15.5 H11.7 L11 18.6 L14.6 13.7 H12.3 Z" fill="#d9c89b" stroke="#d9c89b" strokeWidth="0.5" strokeLinejoin="round" />
+                    </svg>
+                    <span className="font-serif text-[19px] tracking-[-0.01em] text-[#f1ede0] leading-none whitespace-nowrap">
+                      Fasthomes<span className="text-gold-warm">UK</span>
+                    </span>
+                  </span>
+                  {/* Mid-dot */}
+                  <span className="w-[3px] h-[3px] rounded-full bg-[#3a3528] mx-4 flex-shrink-0" />
+                  {/* Same Day Home Buyer — links out */}
+                  <a
+                    href={SAME_DAY_HOME_BUYER_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    title="Visit Same Day Home Buyer — opens in a new tab"
+                    className="inline-flex items-center gap-[6px] transition-opacity hover:opacity-75 group"
+                  >
+                    <Image
+                      src="/samedayhomebuyer-logo.png"
+                      alt="Same Day Home Buyer"
+                      width={472}
+                      height={162}
+                      className="h-[20px] w-auto brightness-0 invert opacity-50"
+                    />
+                    <svg
+                      width={11} height={11} viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                      className="transition-[transform,opacity] opacity-60 group-hover:opacity-100 group-hover:translate-x-[1px] group-hover:translate-y-[-1px]"
+                      style={{ color: "#d9c89b" }}
+                    >
+                      <path d="M7 17 L17 7 M9 7 h8 v8" />
+                    </svg>
+                  </a>
+                </div>
+              </div>
+            </div>
             <p className="text-[14px] leading-[1.6] max-w-[38ch] text-[#9d957f] mt-[14px]">
               Property investment and asset management for the long horizon. Family-led, principal-aligned, privately held since 1997.
             </p>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -74,10 +75,11 @@ export default function Nav() {
   }, []);
 
   return (
-    <header className="border-b border-rule bg-bg sticky top-0 z-50 backdrop-saturate-[120%]">
+    <header className="bg-bg sticky top-0 z-50 backdrop-saturate-[120%]">
+      {/* ── Main bar ── */}
       <div className="wrap flex items-center justify-between h-[72px]">
-        {/* Brand */}
-        <Link href="/" className="flex items-center gap-2 sm:gap-[14px]" onClick={goHome}>
+        {/* Crestbourne mark */}
+        <Link href="/" className="flex items-center gap-[14px]" onClick={goHome}>
           <div className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full border border-ink bg-paper grid place-items-center flex-shrink-0 before:content-[''] before:absolute before:inset-1 before:rounded-full before:border before:border-ink before:opacity-25">
             <span className="font-serif italic text-[18px] sm:text-[20px] leading-none text-ink translate-y-[-1px]">C</span>
           </div>
@@ -85,49 +87,51 @@ export default function Nav() {
             <div className="font-serif text-[20px] sm:text-[24px] tracking-[-0.01em]">Crestbourne</div>
             <span className="hidden sm:block font-mono text-[9px] tracking-widest3 text-muted uppercase mt-[-2px]">Est. 1997 · London</span>
           </div>
-          <span className="block text-rule font-mono text-[16px] select-none mx-2 sm:mx-3">|</span>
-          <span className="flex items-center gap-[10px]">
-            <svg
-              viewBox="0 0 40 40"
-              className="w-8 h-8 sm:w-9 sm:h-9 flex-shrink-0 rounded-[11px] shadow-sm ring-1 ring-black/5"
-            >
-              <defs>
-                <linearGradient id="fhNav" x1="0" y1="0" x2="40" y2="40" gradientUnits="userSpaceOnUse">
-                  <stop offset="0" stopColor="#f59e0b" />
-                  <stop offset="0.5" stopColor="#fb6f4d" />
-                  <stop offset="1" stopColor="#e11d6b" />
-                </linearGradient>
-              </defs>
-              <rect width="40" height="40" rx="11" fill="url(#fhNav)" />
-              <path
-                d="M11 19.5 L20 11.5 L29 19.5"
-                fill="none"
-                stroke="#fff"
-                strokeWidth={2.2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M13.5 18.6 V29 H26.5 V18.6"
-                fill="none"
-                stroke="#fff"
-                strokeWidth={2.2}
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              />
-              <path
-                d="M21.4 19 L16.8 25 H19.6 L18.2 29.5 L23.4 23 H20.4 Z"
-                fill="#fde047"
-                stroke="#fde047"
-                strokeWidth={0.6}
-                strokeLinejoin="round"
-              />
-            </svg>
-            <span className="font-serif text-[18px] sm:text-[20px] tracking-[-0.01em] text-ink leading-none whitespace-nowrap">
-              Fasthomes<span className="text-[#e11d6b]">UK</span>
-            </span>
-          </span>
         </Link>
+
+        {/* Endorsed group cluster — desktop only (md+) */}
+        <div className="hidden md:flex items-center gap-[14px]">
+          <span className="w-px h-[38px] bg-rule flex-shrink-0" />
+          <div className="flex flex-col gap-[5px]">
+            {/* <span className="font-mono text-[9px] tracking-widest3 text-muted uppercase">The Group</span> */}
+            <div className="flex items-center">
+              <span className="inline-flex items-center gap-[9px]">
+                <svg viewBox="0 0 24 24" width={17} height={17} className="flex-shrink-0 text-ink">
+                  <path d="M5 11 L12 5 L19 11" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M6.6 10 V19 H17.4 V10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                  <path d="M13.1 10.7 L9.6 15.5 H11.7 L11 18.6 L14.6 13.7 H12.3 Z" fill="#8a6d3a" stroke="#8a6d3a" strokeWidth="0.5" strokeLinejoin="round" />
+                </svg>
+                <span className="font-serif text-[19px] tracking-[-0.01em] text-ink leading-none whitespace-nowrap">
+                  Fasthomes<span className="text-gold">UK</span>
+                </span>
+              </span>
+              <span className="w-[3px] h-[3px] rounded-full bg-rule mx-4 flex-shrink-0" />
+              <a
+                href="https://www.samedayhomebuyer.co.uk/"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="Visit Same Day Home Buyer — opens in a new tab"
+                className="inline-flex items-center gap-[6px] transition-opacity hover:opacity-75 group"
+              >
+                <Image
+                  src="/samedayhomebuyer-logo.png"
+                  alt="Same Day Home Buyer"
+                  width={472}
+                  height={162}
+                  priority
+                  className="h-[20px] w-auto grayscale opacity-70"
+                />
+                <svg
+                  width={11} height={11} viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+                  className="text-gold opacity-70 transition-[transform,opacity] group-hover:opacity-100 group-hover:translate-x-[1px] group-hover:translate-y-[-1px]"
+                >
+                  <path d="M7 17 L17 7 M9 7 h8 v8" />
+                </svg>
+              </a>
+            </div>
+          </div>
+        </div>
 
         {/* Primary nav */}
         <nav className="hidden lg:block">
@@ -167,6 +171,48 @@ export default function Nav() {
           </button>
         </div>
       </div>
+
+      {/* ── Group bar — mobile only (below md) ── */}
+      <div className="md:hidden border-t border-rule-soft px-6 h-[42px] flex items-center gap-3">
+        <span className="font-mono text-[9px] tracking-widest3 text-muted uppercase">The Group</span>
+        <span className="w-px h-[22px] bg-rule flex-shrink-0" />
+        <span className="inline-flex items-center gap-[7px]">
+          <svg viewBox="0 0 24 24" width={15} height={15} className="flex-shrink-0 text-ink">
+            <path d="M5 11 L12 5 L19 11" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M6.6 10 V19 H17.4 V10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+            <path d="M13.1 10.7 L9.6 15.5 H11.7 L11 18.6 L14.6 13.7 H12.3 Z" fill="#8a6d3a" stroke="#8a6d3a" strokeWidth="0.5" strokeLinejoin="round" />
+          </svg>
+          <span className="font-serif text-[16px] tracking-[-0.01em] text-ink leading-none whitespace-nowrap">
+            Fasthomes<span className="text-gold">UK</span>
+          </span>
+        </span>
+        <span className="w-[3px] h-[3px] rounded-full bg-rule flex-shrink-0 mx-1" />
+        <a
+          href="https://www.samedayhomebuyer.co.uk/"
+          target="_blank"
+          rel="noopener noreferrer"
+          title="Visit Same Day Home Buyer — opens in a new tab"
+          className="inline-flex items-center gap-[5px] transition-opacity hover:opacity-75 group"
+        >
+          <Image
+            src="/samedayhomebuyer-logo.png"
+            alt="Same Day Home Buyer"
+            width={472}
+            height={162}
+            className="h-[18px] w-auto grayscale opacity-70"
+          />
+          <svg
+            width={10} height={10} viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"
+            className="text-gold opacity-70 group-hover:opacity-100 transition-[transform,opacity] group-hover:translate-x-[1px] group-hover:translate-y-[-1px]"
+          >
+            <path d="M7 17 L17 7 M9 7 h8 v8" />
+          </svg>
+        </a>
+      </div>
+
+      {/* ── Border below entire header ── */}
+      <div className="border-b border-rule" />
 
       {/* Mobile drawer */}
       {menuOpen && (
