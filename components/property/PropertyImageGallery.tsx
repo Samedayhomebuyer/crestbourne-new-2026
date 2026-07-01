@@ -26,6 +26,10 @@ function GalleryImage({
   address?: string | null;
   showAddress?: boolean;
 }) {
+  const hasCaption = !!img.caption;
+  const hasAddress = showAddress && !!address;
+  const hasBanner = hasCaption || hasAddress;
+
   return (
     <div className="relative w-full h-full overflow-hidden bg-[#ebe5d6] group/img">
       <Image
@@ -36,18 +40,24 @@ function GalleryImage({
         className="object-cover [filter:saturate(.9)_contrast(1.04)] transition-transform duration-700 ease-out group-hover/img:scale-[1.03]"
         sizes={sizes}
       />
-      {/* gradient veil */}
+      {/* gradient veil on hover */}
       <div className="absolute inset-0 bg-gradient-to-t from-[rgba(14,12,9,0.52)] via-[rgba(14,12,9,0.08)] to-transparent opacity-0 group-hover/img:opacity-100 transition-opacity duration-500" />
 
-      {/* address banner – hero only */}
-      {showAddress && address && (
-        <div className="absolute bottom-0 left-0 right-0 px-6 py-4 bg-gradient-to-t from-[rgba(14,12,9,0.78)] to-transparent">
-          <div className="flex items-center gap-2 text-[#ddd6c4]">
-            <PinIcon />
-            <span className="font-mono text-[10px] tracking-[0.18em] uppercase leading-none">
-              {address}
-            </span>
-          </div>
+      {hasBanner && (
+        <div className="absolute bottom-0 left-0 right-0 px-6 py-5 bg-gradient-to-t from-[rgba(14,12,9,0.84)] via-[rgba(14,12,9,0.5)] to-transparent">
+          {hasCaption && (
+            <p className="font-sans text-[15px] text-[#f1ede0] leading-snug mb-2">
+              {img.caption}
+            </p>
+          )}
+          {hasAddress && (
+            <div className="flex items-center gap-[7px] text-[#a09880]">
+              <PinIcon />
+              <span className="font-mono text-[10px] tracking-[0.18em] uppercase leading-none">
+                {address}
+              </span>
+            </div>
+          )}
         </div>
       )}
     </div>
@@ -89,13 +99,6 @@ export default function PropertyImageGallery({
           <GalleryImage img={hero} priority sizes="(max-width: 640px) 100vw, 1272px" address={address} showAddress />
         </div>
 
-        {/* caption */}
-        {(hero.caption ?? hero.altText) && (
-          <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-muted/70 mt-3 mb-0">
-            {hero.caption ?? hero.altText}
-          </p>
-        )}
-
         {/* grid of pairs */}
         {pairs.length > 0 && (
           <div className="flex flex-col gap-4 mt-4">
@@ -108,15 +111,8 @@ export default function PropertyImageGallery({
                 )}
               >
                 {pair.map((img) => (
-                  <div key={img.id} className="flex flex-col">
-                    <div className="relative aspect-[4/3] border border-rule overflow-hidden">
-                      <GalleryImage img={img} sizes="(max-width: 640px) 100vw, 636px" />
-                    </div>
-                    {(img.caption ?? img.altText) && (
-                      <p className="font-mono text-[10px] tracking-[0.12em] uppercase text-muted/70 mt-2">
-                        {img.caption ?? img.altText}
-                      </p>
-                    )}
+                  <div key={img.id} className="relative aspect-[4/3] border border-rule overflow-hidden">
+                    <GalleryImage img={img} sizes="(max-width: 640px) 100vw, 636px" />
                   </div>
                 ))}
               </div>

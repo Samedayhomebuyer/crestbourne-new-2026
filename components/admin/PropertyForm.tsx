@@ -364,9 +364,20 @@ export default function PropertyForm({ propertyId }: { propertyId?: string }) {
               onUpload={(url) => updateImage(i, "url", url)}
               label={`Gallery image ${i + 1}`}
             />
-            <div>
-              <label className={field}>Alt text</label>
-              <input value={img.altText} onChange={(e) => updateImage(i, "altText", e.target.value)} className={input} />
+            <div className="flex flex-col gap-3">
+              <div>
+                <label className={field}>Alt text</label>
+                <input value={img.altText} onChange={(e) => updateImage(i, "altText", e.target.value)} className={input} />
+              </div>
+              <div>
+                <label className={field}>Caption</label>
+                <input
+                  value={img.caption}
+                  onChange={(e) => updateImage(i, "caption", e.target.value)}
+                  className={input}
+                  placeholder="e.g. Front elevation, Chesterfield"
+                />
+              </div>
             </div>
             <button type="button" onClick={() => removeImage(i)} className="font-mono text-[10px] uppercase text-red-500 hover:text-red-700 pb-2">
               Remove
