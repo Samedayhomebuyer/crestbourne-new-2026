@@ -112,7 +112,7 @@ export default async function PropertyDetailPage({ params }: { params: { slug: s
       </section>
 
       {/* Gallery */}
-      <PropertyImageGallery images={property.images} />
+      <PropertyImageGallery images={property.images} address={property.address} />
 
       {/* Related holdings */}
       <RelatedProperties properties={related} />
