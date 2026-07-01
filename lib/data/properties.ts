@@ -72,6 +72,7 @@ export async function getPortfolioProperties() {
 }
 
 export async function getPropertyBySlug(slug: string): Promise<PropertyWithImages | null> {
+  noStore();
   const row = await db.query.properties.findFirst({
     where: eq(properties.slug, slug),
     with: { images: { orderBy: [propertyImages.displayOrder] } },
