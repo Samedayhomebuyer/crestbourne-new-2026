@@ -89,7 +89,7 @@ export default function Portfolio({
               >
                 <article className={cn(
                   "bg-paper border border-rule flex flex-col transition-all duration-300 ease-out hover:-translate-y-[2px] hover:shadow-[0_12px_32px_-16px_rgba(23,22,18,0.18)] h-full",
-                  hoveredId !== null && hoveredId !== p.id && "blur-[2px] scale-[0.98] opacity-80"
+                  hoveredId !== null && hoveredId !== p.id && "scale-[0.98] opacity-80"
                 )}>
                   <div className="relative overflow-hidden prop-img-bg aspect-[4/3]">
                     {p.coverImageUrl && (
