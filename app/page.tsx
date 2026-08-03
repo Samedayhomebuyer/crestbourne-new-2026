@@ -13,7 +13,7 @@ import Footer from "@/components/Footer";
 import { getRecentlyAcquired, getPortfolioProperties, pickRandom } from "@/lib/data/properties";
 import { CATEGORY_LABELS } from "@/lib/db/schema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 export default async function Home() {
   const [{ cards }, { properties, filterCounts }] = await Promise.all([

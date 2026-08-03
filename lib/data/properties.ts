@@ -1,4 +1,5 @@
-import { unstable_noStore as noStore } from "next/cache";
+import { cache } from "react";
+import { unstable_cache, revalidateTag, revalidatePath } from "next/cache";
 import { db } from "@/lib/db";
 import { properties, propertyImages } from "@/lib/db/schema";
 import type { PropertyCategory } from "@/lib/db/schema";
@@ -8,17 +9,14 @@ export type PropertyWithImages = typeof properties.$inferSelect & {
   images: (typeof propertyImages.$inferSelect)[];
 };
 
-export async function getAllProperties(): Promise<PropertyWithImages[]> {
-  noStore();
-  const rows = await db.query.properties.findMany({
-    orderBy: [desc(properties.createdAt)],
-    with: { images: { orderBy: [propertyImages.displayOrder] } },
-  });
-  return rows as PropertyWithImages[];
+export function revalidateProperties() {
+  revalidateTag("properties");
+  revalidatePath("/");
+  revalidatePath("/properties", "layout");
+  revalidatePath("/sitemap.xml");
 }
 
-export async function getPublishedProperties(): Promise<PropertyWithImages[]> {
-  noStore();
+async function queryPublishedProperties(): Promise<PropertyWithImages[]> {
   const props = await db
     .select()
     .from(properties)
@@ -39,6 +37,22 @@ export async function getPublishedProperties(): Promise<PropertyWithImages[]> {
   }, {});
 
   return props.map((p) => ({ ...p, images: byId[p.id] ?? [] }));
+}
+
+const getPublishedPropertiesCached = unstable_cache(
+  queryPublishedProperties,
+  ["published-properties"],
+  { tags: ["properties"], revalidate: 86400 }
+);
+
+export const getPublishedProperties = cache(() => getPublishedPropertiesCached());
+
+export async function getAllProperties(): Promise<PropertyWithImages[]> {
+  const rows = await db.query.properties.findMany({
+    orderBy: [desc(properties.createdAt)],
+    with: { images: { orderBy: [propertyImages.displayOrder] } },
+  });
+  return rows as PropertyWithImages[];
 }
 
 /** Fisher–Yates sample of up to `count` items (new array, does not mutate input). */
@@ -71,8 +85,7 @@ export async function getPortfolioProperties() {
   return { properties: portfolio, filterCounts };
 }
 
-export async function getPropertyBySlug(slug: string): Promise<PropertyWithImages | null> {
-  noStore();
+async function queryPropertyBySlug(slug: string): Promise<PropertyWithImages | null> {
   const row = await db.query.properties.findFirst({
     where: eq(properties.slug, slug),
     with: { images: { orderBy: [propertyImages.displayOrder] } },
@@ -80,8 +93,14 @@ export async function getPropertyBySlug(slug: string): Promise<PropertyWithImage
   return (row as PropertyWithImages) ?? null;
 }
 
+export const getPropertyBySlug = cache(async (slug: string) =>
+  unstable_cache(() => queryPropertyBySlug(slug), ["property-by-slug", slug], {
+    tags: ["properties"],
+    revalidate: 86400,
+  })()
+);
+
 export async function getPropertyById(id: string): Promise<PropertyWithImages | null> {
-  noStore();
   const row = await db.query.properties.findFirst({
     where: eq(properties.id, id),
     with: { images: { orderBy: [propertyImages.displayOrder] } },
@@ -98,6 +117,7 @@ export async function getRelatedProperties(slug: string, category: PropertyCateg
 
 export async function createProperty(data: typeof properties.$inferInsert) {
   const [row] = await db.insert(properties).values(data).returning();
+  revalidateProperties();
   return row;
 }
 
@@ -107,11 +127,13 @@ export async function updateProperty(id: string, data: Partial<typeof properties
     .set({ ...data, updatedAt: new Date() })
     .where(eq(properties.id, id))
     .returning();
+  revalidateProperties();
   return row;
 }
 
 export async function deleteProperty(id: string) {
   await db.delete(properties).where(eq(properties.id, id));
+  revalidateProperties();
 }
 
 export async function setPropertyImages(
@@ -119,15 +141,17 @@ export async function setPropertyImages(
   imgs: { url: string; altText?: string; caption?: string }[]
 ) {
   await db.delete(propertyImages).where(eq(propertyImages.propertyId, propertyId));
-  if (!imgs.length) return;
-  await db.insert(propertyImages).values(
-    imgs.map((img, i) => ({
-      propertyId,
-      url: img.url,
-      altText: img.altText ?? null,
-      caption: img.caption ?? null,
-      displayOrder: i,
-      isCover: i === 0,
-    }))
-  );
+  if (imgs.length) {
+    await db.insert(propertyImages).values(
+      imgs.map((img, i) => ({
+        propertyId,
+        url: img.url,
+        altText: img.altText ?? null,
+        caption: img.caption ?? null,
+        displayOrder: i,
+        isCover: i === 0,
+      }))
+    );
+  }
+  revalidateProperties();
 }

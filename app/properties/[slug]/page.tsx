@@ -11,7 +11,7 @@ import MobileActionBar from "@/components/property/MobileActionBar";
 import { getPropertyBySlug, getRelatedProperties } from "@/lib/data/properties";
 import { CATEGORY_LABELS } from "@/lib/db/schema";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 86400;
 
 export async function generateMetadata({ params }: { params: { slug: string } }) {
   const property = await getPropertyBySlug(params.slug);
